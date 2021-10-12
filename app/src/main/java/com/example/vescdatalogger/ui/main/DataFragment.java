@@ -1,0 +1,22 @@
+package com.example.vescdatalogger.ui.main;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+
+import com.example.vescdatalogger.R;
+
+public class DataFragment extends Fragment {
+    private static final String TAG = "DataFragment";
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_data, container, false);
+
+        return view;
+    }
+
+}

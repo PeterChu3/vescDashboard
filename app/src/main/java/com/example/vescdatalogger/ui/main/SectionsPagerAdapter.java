@@ -10,6 +10,9 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.vescdatalogger.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the sections/tabs/pages.
@@ -20,6 +23,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
     private final Context mContext;
 
+    private final List<Fragment> mFragmentList = new ArrayList<>();
+
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
         super(fm);
         mContext = context;
@@ -29,7 +34,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        return PlaceholderFragment.newInstance(position + 1);
+        //return PlaceholderFragment.newInstance(position + 1);
+        //return ConnectFragment.newInstance(position + 1);
+        return mFragmentList.get(position);
     }
 
     @Nullable
@@ -42,5 +49,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         // Show 2 total pages.
         return 2;
+    }
+
+    public void addFragment(Fragment fragment) {
+        mFragmentList.add(fragment);
     }
 }

@@ -2,6 +2,8 @@ package com.example.vescdatalogger;
 
 import android.os.Bundle;
 
+import com.example.vescdatalogger.ui.main.DataFragment;
+import com.example.vescdatalogger.ui.main.ScanFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -28,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        sectionsPagerAdapter.addFragment(new ScanFragment());
+        sectionsPagerAdapter.addFragment(new DataFragment());
         ViewPager viewPager = binding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;

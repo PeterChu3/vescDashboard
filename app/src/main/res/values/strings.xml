@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">VESC Data Logger</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_1">Connect</string>
+    <string name="tab_text_2">Data</string>
+    <string name="tab_text_3">Files</string>
     <string name="button_scan">Scan</string>
+    <string name="button_connect">Connect</string>
+    <string name="button_disconnect">Disconnect</string>
 </resources>

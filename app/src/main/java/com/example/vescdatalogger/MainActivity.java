@@ -93,11 +93,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button scanButton = findViewById(R.id.button2);
-        /*scanButton.setOnClickListener(new View.OnClickListener() {
+        /*Button scanButton = findViewById(R.id.button2);
+        scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startBLEscan();
+                //startBLEscan();
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });*/
     }

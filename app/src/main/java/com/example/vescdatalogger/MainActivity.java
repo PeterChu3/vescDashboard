@@ -37,17 +37,11 @@ public class MainActivity extends AppCompatActivity {
 
     private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-    private void startBLEscan() {
-        if (!hasLocationPermission()) {
 
-        } else {
-
-        }
-    }
 
     private void requestLocationPermission() {
         LocationPermissionFragment locationAlert = new LocationPermissionFragment();
-        //locationAlert.show(getSupportFragmentManager(), "locationAlertDialog");
+        locationAlert.show(getSupportFragmentManager(), "locationAlertDialog");
     }
 
 

@@ -1,12 +1,15 @@
 package com.example.vescdatalogger;
 
 import android.bluetooth.le.ScanResult;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.vescdatalogger.ui.main.ScanFragment;
 
 import org.w3c.dom.Text;
 
@@ -16,12 +19,15 @@ import java.util.List;
 public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.ViewHolder> {
 
     private List<ScanResult> items;
+    private View.OnClickListener onClickListener;
+    private ScanFragment.customListener customListener;
     //add an onclicklistener
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder { //does it need to be static?
         public TextView device_name;
         public TextView mac_address;
         public TextView signal_strength;
+        //private View.OnClickListener onClickListener;
 
         public ViewHolder(View view) {
             super(view);
@@ -29,6 +35,8 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
             device_name = (TextView) view.findViewById(R.id.device_name);
             mac_address = (TextView) view.findViewById(R.id.mac_address);
             signal_strength = (TextView) view.findViewById(R.id.signal_strength);
+
+           // this.onClickListener = onClickListener;
         }
 
         public void bind(ScanResult result) {
@@ -38,7 +46,15 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
             mac_address.setText(result.getDevice().getAddress());
             String signalStrengthString = result.getRssi() + " dBM";
             signal_strength.setText(signalStrengthString);
+            customListener.setResult(result); //this is being called everytime a new one is added to the list
+            ScanFragment.customListener customListener1 = new ScanFragment.customListener(result);
+            this.itemView.setOnClickListener(customListener1);
         }
+
+        /*@Override
+        public void onClick(View view) {
+            Log.i("viewholderOnclick", "clicked it!"); //this works
+        }*/
     }
 
     @Override
@@ -58,7 +74,10 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
         return items.size();
     }
 
-    public ScanResultAdapter(List<ScanResult> results) {
+    public ScanResultAdapter(List<ScanResult> results, ScanFragment.customListener onClickListener) {
+
         items = results;
+       // this.onClickListener = onClickListener;
+        this.customListener = onClickListener;
     }
 }

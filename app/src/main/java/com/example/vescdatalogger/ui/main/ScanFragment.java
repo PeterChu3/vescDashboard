@@ -34,9 +34,39 @@ public class ScanFragment extends Fragment {
     private BluetoothLeScanner bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
     //private ScanSettings scanSettings = ScanSettings.Builder()
     //scan filter
+    private int setResultNum = 0;
 
     private List<ScanResult> scanResults = new ArrayList<>();
-    private ScanResultAdapter scanResultAdapter = new ScanResultAdapter(scanResults);
+    View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Log.i("viewholderOnclick", "clicked it! from scanfragment"); //this works, passing it as arg to new scanresultadapter
+        }
+    };
+
+    public static class customListener implements View.OnClickListener {
+        ScanResult result;
+
+        public customListener (ScanResult result) {
+            this.result = result;
+        }
+        public customListener () {
+
+        }
+        public void setResult(ScanResult result) {
+            this.result = result;
+            Log.i("customSetResult", "setResult");
+        }
+        @Override
+        public void onClick(View view) {
+            Log.i("viewholderOnclick", "clicked it! from custom");
+            Log.i("customOnclick", "Found BLE device: " + result.getDevice().getName() + ", address: " + result.getDevice().getAddress());
+        }
+    }
+    customListener newListener = new customListener();
+
+    private ScanResultAdapter scanResultAdapter = new ScanResultAdapter(scanResults, newListener);
+
 
 
     private boolean isScanning = false; //change the button to switch from scan to stop scanning eventually

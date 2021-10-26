@@ -37,12 +37,6 @@ public class ScanFragment extends Fragment {
     private int setResultNum = 0;
 
     private List<ScanResult> scanResults = new ArrayList<>();
-    View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Log.i("viewholderOnclick", "clicked it! from scanfragment"); //this works, passing it as arg to new scanresultadapter
-        }
-    };
 
     public static class customListener implements View.OnClickListener {
         ScanResult result;

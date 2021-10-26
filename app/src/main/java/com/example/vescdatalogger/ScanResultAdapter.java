@@ -19,15 +19,12 @@ import java.util.List;
 public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.ViewHolder> {
 
     private List<ScanResult> items;
-    private View.OnClickListener onClickListener;
     private ScanFragment.customListener customListener;
-    //add an onclicklistener
 
     public class ViewHolder extends RecyclerView.ViewHolder { //does it need to be static?
         public TextView device_name;
         public TextView mac_address;
         public TextView signal_strength;
-        //private View.OnClickListener onClickListener;
 
         public ViewHolder(View view) {
             super(view);
@@ -36,7 +33,6 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
             mac_address = (TextView) view.findViewById(R.id.mac_address);
             signal_strength = (TextView) view.findViewById(R.id.signal_strength);
 
-           // this.onClickListener = onClickListener;
         }
 
         public void bind(ScanResult result) {
@@ -50,11 +46,6 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
             ScanFragment.customListener customListener1 = new ScanFragment.customListener(result);
             this.itemView.setOnClickListener(customListener1);
         }
-
-        /*@Override
-        public void onClick(View view) {
-            Log.i("viewholderOnclick", "clicked it!"); //this works
-        }*/
     }
 
     @Override
@@ -77,7 +68,6 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
     public ScanResultAdapter(List<ScanResult> results, ScanFragment.customListener onClickListener) {
 
         items = results;
-       // this.onClickListener = onClickListener;
         this.customListener = onClickListener;
     }
 }

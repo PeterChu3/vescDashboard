@@ -4,12 +4,16 @@ import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,6 +43,8 @@ public class ScanFragment extends Fragment {
     //scan filter
     private int setResultNum = 0;
 
+    private BluetoothGatt bluetoothGatt;
+
     private List<ScanResult> scanResults = new ArrayList<>();
 
     public class customListener implements View.OnClickListener {
@@ -62,7 +68,7 @@ public class ScanFragment extends Fragment {
                 stopBLEscan();
             }
             Log.w("customOnclick","connecting to " + result.getDevice().getAddress());
-            result.getDevice().connectGatt(getContext(), false, bluetoothGattCallback);
+            bluetoothGatt = result.getDevice().connectGatt(getContext(), false, bluetoothGattCallback);
         }
     }
     customListener newListener = new customListener();
@@ -78,6 +84,7 @@ public class ScanFragment extends Fragment {
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
                     Log.w("BluetoothGattCallback", "Successfully connected to " + deviceAddress);
                     //store a reference to bluetoothgatt
+                    gatt.discoverServices();
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     Log.w("BluetoothGattCallback", "Successfully disconnected from " + deviceAddress);
                     gatt.close();
@@ -86,6 +93,18 @@ public class ScanFragment extends Fragment {
                     Log.w("BluetoothGattCallback", "Error " + status + " encountered for " + deviceAddress + "! Disconnecting...");
                     gatt.close();
                 }
+            }
+        }
+
+        @Override
+        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                Log.w("BluetoothGattCallback", "onServicesDiscovered success");
+                for (BluetoothGattService service : gatt.getServices()) {
+                    Log.w("gattServices", service.getUuid().toString());
+                }
+            } else {
+                Log.w("BluetoothGattCallback", "onServicesDiscovered received " + status);
             }
         }
     };
@@ -178,5 +197,24 @@ public class ScanFragment extends Fragment {
 
         return view;
     }
+
+    /*private final BroadcastReceiver gattUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (action.equals("gatt connected")) {
+                //connected = true;
+            } else if (action.equals("gatt disconnected")) {
+                //connected = false
+            } else if (action.equals("gatt services discovered")) {
+                //display gatt services
+            }
+        }
+    };
+
+    private void broadcastUpdate(final String action) {
+        final Intent intent = new Intent(action);
+        sendBroadcast(intent);
+    }*/
 
 }

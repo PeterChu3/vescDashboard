@@ -43,7 +43,7 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
             String signalStrengthString = result.getRssi() + " dBM";
             signal_strength.setText(signalStrengthString);
             customListener.setResult(result); //this is being called everytime a new one is added to the list
-            ScanFragment.customListener customListener1 = new ScanFragment.customListener(result);
+            ScanFragment.customListener customListener1 = new ScanFragment().new customListener(result);
             this.itemView.setOnClickListener(customListener1);
         }
     }

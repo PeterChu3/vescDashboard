@@ -2,6 +2,9 @@ package com.example.vescdatalogger.ui.main;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
@@ -38,7 +41,7 @@ public class ScanFragment extends Fragment {
 
     private List<ScanResult> scanResults = new ArrayList<>();
 
-    public static class customListener implements View.OnClickListener {
+    public class customListener implements View.OnClickListener {
         ScanResult result;
 
         public customListener (ScanResult result) {
@@ -55,15 +58,39 @@ public class ScanFragment extends Fragment {
         public void onClick(View view) {
             Log.i("viewholderOnclick", "clicked it! from custom");
             Log.i("customOnclick", "Found BLE device: " + result.getDevice().getName() + ", address: " + result.getDevice().getAddress());
+            if (isScanning) {
+                stopBLEscan();
+            }
+            Log.w("customOnclick","connecting to " + result.getDevice().getAddress());
+            result.getDevice().connectGatt(getContext(), false, bluetoothGattCallback);
         }
     }
     customListener newListener = new customListener();
 
     private ScanResultAdapter scanResultAdapter = new ScanResultAdapter(scanResults, newListener);
 
+    private final BluetoothGattCallback bluetoothGattCallback = new BluetoothGattCallback() {
+        @Override
+        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+            //super.onConnectionStateChange(gatt, status, newState);
+            String deviceAddress = gatt.getDevice().getAddress();
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                if (newState == BluetoothProfile.STATE_CONNECTED) {
+                    Log.w("BluetoothGattCallback", "Successfully connected to " + deviceAddress);
+                    //store a reference to bluetoothgatt
+                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                    Log.w("BluetoothGattCallback", "Successfully disconnected from " + deviceAddress);
+                    gatt.close();
+                }
+                else {
+                    Log.w("BluetoothGattCallback", "Error " + status + " encountered for " + deviceAddress + "! Disconnecting...");
+                    gatt.close();
+                }
+            }
+        }
+    };
 
-
-    private boolean isScanning = false; //change the button to switch from scan to stop scanning eventually
+    public static boolean isScanning = false; //change the button to switch from scan to stop scanning eventually
 
     private ScanCallback leScanCallback =
             new ScanCallback() {

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
@@ -102,6 +103,9 @@ public class ScanFragment extends Fragment {
                 Log.w("BluetoothGattCallback", "onServicesDiscovered success");
                 for (BluetoothGattService service : gatt.getServices()) {
                     Log.w("gattServices", service.getUuid().toString());
+                    for (BluetoothGattCharacteristic gattCharacteristic : service.getCharacteristics()) {
+                        Log.w("gattCharacteristic" , gattCharacteristic.getUuid().toString());
+                    }
                 }
             } else {
                 Log.w("BluetoothGattCallback", "onServicesDiscovered received " + status);

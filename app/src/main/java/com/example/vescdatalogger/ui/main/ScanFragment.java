@@ -111,6 +111,8 @@ public class ScanFragment extends Fragment {
                 Log.w("BluetoothGattCallback", "onServicesDiscovered received " + status);
             }
         }
+
+        //override oncharacteristic read
     };
 
     public static boolean isScanning = false; //change the button to switch from scan to stop scanning eventually

@@ -4,6 +4,6 @@
     <string name="tab_text_2">Data</string>
     <string name="tab_text_3">Files</string>
     <string name="button_scan">Scan</string>
-    <string name="button_connect">Connect</string>
-    <string name="button_disconnect">Disconnect</string>
+    <string name="button_write">Write Gatt</string>
+    <string name="button_read">Read Gatt</string>
 </resources>

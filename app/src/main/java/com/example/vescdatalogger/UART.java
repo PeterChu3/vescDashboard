@@ -39,11 +39,11 @@ public class UART {
             0x6e17, 0x7e36, 0x4e55, 0x5e74, 0x2e93, 0x3eb2, 0x0ed1, 0x1ef0
     };
 
-    public static char crc16(char[] buf, int len) { //how to test?
+    public static char crc16(byte[] buf, int len) { //how to test?
         int i;
         char cksum = 0;
         for (i = 0; i < len; i++) {
-            cksum = crc16_tab[((cksum >> 8) ^ buf[i]) & 0xFF];
+            cksum = (char) (crc16_tab[((cksum >>> 8) ^ buf[i]) & 0xFF] ^ (cksum << 8));
         }
         return cksum;
     }

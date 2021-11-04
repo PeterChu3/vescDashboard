@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
@@ -31,10 +32,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.vescdatalogger.LocationPermissionFragment;
 import com.example.vescdatalogger.R;
 import com.example.vescdatalogger.ScanResultAdapter;
+import com.example.vescdatalogger.UART;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ScanFragment extends Fragment {
     private static final String TAG = "DataFragment";
@@ -45,6 +48,12 @@ public class ScanFragment extends Fragment {
     private int setResultNum = 0;
 
     private BluetoothGatt bluetoothGatt;
+
+    private BluetoothGattCharacteristic UART_RX;
+    private BluetoothGattCharacteristic UART_TX;
+
+    private Button writeUART; // can't do getView().findViewById(R.id.button3) here
+    private Button readUART;
 
     private List<ScanResult> scanResults = new ArrayList<>();
 
@@ -105,14 +114,87 @@ public class ScanFragment extends Fragment {
                     Log.w("gattServices", service.getUuid().toString());
                     for (BluetoothGattCharacteristic gattCharacteristic : service.getCharacteristics()) {
                         Log.w("gattCharacteristic" , gattCharacteristic.getUuid().toString());
+                        if (gattCharacteristic.getUuid().toString().equals("00002a00-0000-1000-8000-00805f9b34fb")) {
+                            //readCharacteristic(gattCharacteristic);
+                        }
+                        if (gattCharacteristic.getUuid().toString().equals("6e400002-b5a3-f393-e0a9-e50e24dcca9e")) {
+                            UART_RX = gattCharacteristic;
+                            Log.i("button check", gattCharacteristic.getUuid() + " " + gattCharacteristic.getProperties() + " " + gattCharacteristic.getPermissions());
+                            //writeCharacteristic(gattCharacteristic);
+                            for (BluetoothGattDescriptor descriptor : gattCharacteristic.getDescriptors()) {
+                                Log.i("descriptors", descriptor.toString());
+                            }
+                        } else if (gattCharacteristic.getUuid().toString().equals("6e400003-b5a3-f393-e0a9-e50e24dcca9e")) {
+                            UART_TX = gattCharacteristic;
+                            Log.i("button check", gattCharacteristic.getUuid() + " " + gattCharacteristic.getProperties() + " " + gattCharacteristic.getPermissions());
+                            for (BluetoothGattDescriptor descriptor : gattCharacteristic.getDescriptors()) {
+                                Log.i("descriptors", descriptor.getUuid().toString());
+                            }
+                            //readCharacteristic(gattCharacteristic);
+                            //gatt.readCharacteristic(gattCharacteristic);
+                            //gatt.setCharacteristicNotification(gattCharacteristic, true);
+                            //writeCharacteristic(UART_RX);
+                            //Log.i("gatt", "set characteristic notifications for TX");
+                        }
                     }
                 }
+                boolean notify = gatt.setCharacteristicNotification(UART_TX, true);
+                Log.i("gatt", "set characteristic notifications for TX " + notify);
+                BluetoothGattDescriptor descriptor = UART_TX.getDescriptors().get(0);
+                descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                gatt.writeDescriptor(descriptor);
             } else {
                 Log.w("BluetoothGattCallback", "onServicesDiscovered received " + status);
             }
+
         }
 
-        //override oncharacteristic read
+        @Override
+        public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            Log.i("gatt",  "onCharacteristic read"); //this does not print
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                Log.i("data", characteristic.getStringValue(0));
+                /*byte[] data = characteristic.getValue();
+                for (byte element : data) {
+                    Log.i("Data", element + "\n");
+                }*/
+            }
+        }
+
+        @Override
+        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+            Log.i("gatt",  "onCharacteristicChanged"); //this does not print
+            byte[] data = characteristic.getValue();
+            for (byte element : data) {
+                Log.i("Data", element + "\n");
+            }
+        }
+
+        @Override
+        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            Log.i("write", characteristic.getUuid().toString() + " " + status);
+            //gatt.setCharacteristicNotification(UART_TX, true); //might need to set the descriptor to true first
+//            boolean notify = gatt.setCharacteristicNotification(UART_TX, true);
+//            Log.i("gatt", "set characteristic notifications for TX " + notify);
+//            BluetoothGattDescriptor descriptor = UART_TX.getDescriptors().get(0);
+//            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+//            gatt.writeDescriptor(descriptor);
+            //Log.i("gatt", "set characteristic notifications for TX" + UART_TX.getUuid().toString());
+        }
+
+        @Override
+        public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+            Log.i("descriptor write", descriptor.getUuid().toString() + " " + status);
+            writeCharacteristic(UART_RX);
+//            try {
+//                Thread.sleep(200);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            boolean notify = gatt.setCharacteristicNotification(UART_TX, true);
+//            Log.i("gatt", "set characteristic notifications for TX " + notify);
+        }
+
     };
 
     public static boolean isScanning = false; //change the button to switch from scan to stop scanning eventually
@@ -180,6 +262,8 @@ public class ScanFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_scan, container, false);
 
         Button scanButton = view.findViewById(R.id.button2);
+        writeUART = view.findViewById(R.id.button3);
+        readUART = view.findViewById(R.id.button4);
         scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -200,8 +284,79 @@ public class ScanFragment extends Fragment {
         rvDevices.setNestedScrollingEnabled(false);
 
         //RecyclerView.ItemAnimator animator = rvDevices.getItemAnimator();
+        //set onclicklistener here
+
+        //hard code the characteristic? hopefully it works
+        UUID rxUUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
+        BluetoothGattCharacteristic hardcodeUART_RX = new BluetoothGattCharacteristic(rxUUID, 12, 0);
+        UUID txUUID = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
+        BluetoothGattCharacteristic hardcodeUART_TX = new BluetoothGattCharacteristic(txUUID, 16, 0);
+
+        /*writeUART.setOnClickListener(new View.OnClickListener() { //nullobjectreference
+            @Override
+            public void onClick(View view) {
+                Log.i("onclick", hardcodeUART_RX.getUuid().toString()); //this is null
+                writeCharacteristic(hardcodeUART_RX);
+            }
+        });
+
+        readUART.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("onclick", hardcodeUART_TX.getUuid().toString());
+                readCharacteristic(hardcodeUART_RX);
+            }
+        });*/
+
+        //writeUART.setOnClickListener(makeWriteButtonOnClick(writeUART, UART_RX));
+        //readUART.setOnClickListener(makeReadButtonOnClick(readUART, UART_TX));
 
         return view;
+    }
+
+    private void writeCharacteristic(BluetoothGattCharacteristic characteristic) {
+        characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
+        byte writeValue[] = new byte[6];
+        writeValue[0] = 2;
+        writeValue[1] = 1;
+        writeValue[2] = UART.COMM_GET_VALUES;
+        byte payload[] = new byte[1];
+        payload[0] = UART.COMM_GET_VALUES;
+        char crc = UART.crc16(payload,1);
+        writeValue[3] = (byte) (crc >>> 8); //MSB CRC
+        Log.i("crc", "crc MSB is " + writeValue[3]); //1D
+        writeValue[4] = (byte) (crc & 0xFF);
+        Log.i("crc", "crc LSB is " + writeValue[4]); //FFD5, matches Peter's crc separately
+        writeValue[5] = 3;
+        characteristic.setValue(writeValue);
+        boolean success = bluetoothGatt.writeCharacteristic(characteristic);
+        Log.i("gatt", "write characteristic " + success);
+    }
+
+    private void readCharacteristic(BluetoothGattCharacteristic characteristic) { //not used
+        bluetoothGatt.readCharacteristic(characteristic);
+        Log.i("gatt", "read characteristic");
+    }
+
+    //would this work?
+    private View.OnClickListener makeWriteButtonOnClick(Button button, BluetoothGattCharacteristic characteristic) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("onclick", UART_RX.getUuid().toString());
+                writeCharacteristic(UART_RX);
+            }
+        };
+    }
+
+    private View.OnClickListener makeReadButtonOnClick(Button button, BluetoothGattCharacteristic characteristic) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("onclick", UART_TX.getUuid().toString());
+                readCharacteristic(UART_TX);
+            }
+        };
     }
 
     /*private final BroadcastReceiver gattUpdateReceiver = new BroadcastReceiver() {

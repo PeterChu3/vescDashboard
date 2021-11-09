@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -163,11 +164,13 @@ public class ScanFragment extends Fragment {
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            Log.i("gatt",  "onCharacteristicChanged"); //this does not print
+            Log.i("gatt",  "onCharacteristicChanged");
             byte[] data = characteristic.getValue();
             for (byte element : data) {
                 Log.i("Data", element + "\n");
             }
+            SystemClock.sleep(500);
+            writeCharacteristic(UART_RX);
         }
 
         @Override
@@ -324,9 +327,9 @@ public class ScanFragment extends Fragment {
         payload[0] = UART.COMM_GET_VALUES;
         char crc = UART.crc16(payload,1);
         writeValue[3] = (byte) (crc >>> 8); //MSB CRC
-        Log.i("crc", "crc MSB is " + writeValue[3]); //1D
+        Log.i("crc", "crc MSB is " + writeValue[3]); //40
         writeValue[4] = (byte) (crc & 0xFF);
-        Log.i("crc", "crc LSB is " + writeValue[4]); //FFD5, matches Peter's crc separately
+        Log.i("crc", "crc LSB is " + writeValue[4]); //83
         writeValue[5] = 3;
         characteristic.setValue(writeValue);
         boolean success = bluetoothGatt.writeCharacteristic(characteristic);

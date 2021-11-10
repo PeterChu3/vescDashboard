@@ -170,6 +170,8 @@ public class ScanFragment extends Fragment {
             for (byte element : data) {
                 Log.i("Data", element + "\n");
             }
+            Message newMessage = new Message(data);
+            VescData.get().addMessage(newMessage);
             SystemClock.sleep(500);
             writeCharacteristic(UART_RX);
         }

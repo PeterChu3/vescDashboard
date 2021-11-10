@@ -1,5 +1,7 @@
 package com.example.vescdatalogger;
 
+import android.util.Log;
+
 import com.example.vescdatalogger.ui.main.Message;
 
 import java.util.LinkedList;
@@ -16,7 +18,21 @@ public class VescData {
     /*public int getTest() {
         return test;
     }*/
+    public void addMessage(Message newMessage) {
+        messageQueue.add(newMessage);
+        Log.i("messagequeue", "added a message");
+    }
+
+    public void removeMessage() {
+        messageQueue.remove();
+    }
+
+    public int queueSize() {
+        return messageQueue.size();
+    }
+
     private static VescData thisVescData;
+
     public static VescData get() {
         if (thisVescData == null) {
             thisVescData = new VescData();

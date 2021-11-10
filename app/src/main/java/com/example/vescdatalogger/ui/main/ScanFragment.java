@@ -34,6 +34,7 @@ import com.example.vescdatalogger.LocationPermissionFragment;
 import com.example.vescdatalogger.R;
 import com.example.vescdatalogger.ScanResultAdapter;
 import com.example.vescdatalogger.UART;
+import com.example.vescdatalogger.VescData;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;

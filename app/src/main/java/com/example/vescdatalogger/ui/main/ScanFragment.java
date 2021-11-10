@@ -296,25 +296,6 @@ public class ScanFragment extends Fragment {
         UUID txUUID = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
         BluetoothGattCharacteristic hardcodeUART_TX = new BluetoothGattCharacteristic(txUUID, 16, 0);
 
-        /*writeUART.setOnClickListener(new View.OnClickListener() { //nullobjectreference
-            @Override
-            public void onClick(View view) {
-                Log.i("onclick", hardcodeUART_RX.getUuid().toString()); //this is null
-                writeCharacteristic(hardcodeUART_RX);
-            }
-        });
-
-        readUART.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i("onclick", hardcodeUART_TX.getUuid().toString());
-                readCharacteristic(hardcodeUART_RX);
-            }
-        });*/
-
-        //writeUART.setOnClickListener(makeWriteButtonOnClick(writeUART, UART_RX));
-        //readUART.setOnClickListener(makeReadButtonOnClick(readUART, UART_TX));
-
         return view;
     }
 
@@ -342,26 +323,7 @@ public class ScanFragment extends Fragment {
         Log.i("gatt", "read characteristic");
     }
 
-    //would this work?
-    private View.OnClickListener makeWriteButtonOnClick(Button button, BluetoothGattCharacteristic characteristic) {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i("onclick", UART_RX.getUuid().toString());
-                writeCharacteristic(UART_RX);
-            }
-        };
-    }
 
-    private View.OnClickListener makeReadButtonOnClick(Button button, BluetoothGattCharacteristic characteristic) {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i("onclick", UART_TX.getUuid().toString());
-                readCharacteristic(UART_TX);
-            }
-        };
-    }
 
     /*private final BroadcastReceiver gattUpdateReceiver = new BroadcastReceiver() {
         @Override

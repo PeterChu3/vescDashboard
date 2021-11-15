@@ -1,4 +1,8 @@
 package com.example.vescdatalogger.ui.main;
+import android.util.Log;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class Message {
     /*
@@ -35,8 +39,16 @@ public class Message {
     float vd;
     float vq;
 
+    Date timestamp;
+
     public Message(byte[] bytes) {
         //Assign values using methods below
+        timestamp = Calendar.getInstance().getTime();
+        Log.i("timestamp", timestamp.toString());
+        Log.i("voltage hex 29", String.valueOf(bytes[29]));
+        Log.i("voltage hex 30", String.valueOf(bytes[30]));
+        batteryVoltage = float16(bytes, 10, 29);
+        Log.i("voltage", String.valueOf(batteryVoltage));
     }
     private static float float16(byte[] bytes, float scale, int index) {
         int firstByte = ((bytes[index] << 8) & 0x0000ff00);

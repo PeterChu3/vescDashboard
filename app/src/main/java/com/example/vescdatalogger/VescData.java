@@ -10,7 +10,7 @@ import java.util.Queue;
 public class VescData {
     //private int test;
 
-    private Queue<Message> messageQueue = new LinkedList<>();
+    private LinkedList<Message> messageQueue = new LinkedList<>();
 
     private VescData(){
         //test = 1;
@@ -21,6 +21,10 @@ public class VescData {
     public void addMessage(Message newMessage) {
         messageQueue.add(newMessage);
         Log.i("messagequeue", "added a message");
+    }
+
+    public Message getRecent() {
+        return messageQueue.peekLast();
     }
 
     public void removeMessage() {

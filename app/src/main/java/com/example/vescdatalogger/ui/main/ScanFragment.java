@@ -167,11 +167,16 @@ public class ScanFragment extends Fragment {
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             Log.i("gatt",  "onCharacteristicChanged");
             byte[] data = characteristic.getValue();
+            int i = 0;
             for (byte element : data) {
-                Log.i("Data", element + "\n");
+                Log.i("Data", "index " + i + ": " + element + "\n");
+                i++;
             }
             Message newMessage = new Message(data);
             VescData.get().addMessage(newMessage);
+            if (VescData.get().queueSize() > 100) { //holds last 100 messages
+                VescData.get().removeMessage();
+            }
             SystemClock.sleep(500);
             writeCharacteristic(UART_RX);
         }

@@ -6,4 +6,9 @@
     <string name="button_scan">Scan</string>
     <string name="button_write">Write Gatt</string>
     <string name="button_read">Read Gatt</string>
+    <string-array name="parameter_array">
+        <item>Battery Voltage</item>
+        <item>MOSFET Temp</item>
+
+    </string-array>
 </resources>

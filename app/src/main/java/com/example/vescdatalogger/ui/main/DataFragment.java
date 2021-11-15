@@ -4,23 +4,35 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.vescdatalogger.MainActivity;
 import com.example.vescdatalogger.R;
+import com.example.vescdatalogger.VescData;
+import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-public class DataFragment extends Fragment {
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class DataFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     private static final String TAG = "DataFragment";
 
     public static int counter = 1;
     public static int x = 5;
+
+    private static Date mostRecentPlotted;
 
     private final Handler mHandler = new Handler();
     private Runnable mTimer1;
@@ -30,16 +42,36 @@ public class DataFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_data, container, false);
 
+        mostRecentPlotted = new Date(0);
+
+        Spinner spinner = (Spinner) view.findViewById(R.id.parameter_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.parameter_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
         GraphView graph = (GraphView) view.findViewById(R.id.graph);
-        mSeries1 = new LineGraphSeries<DataPoint>(new DataPoint[] {
+        graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+            @Override
+            public String formatLabel(double value, boolean isValueX) {
+                if (isValueX) {
+                    Format formatter = new SimpleDateFormat("h:mm a");
+                    return formatter.format(value);
+                }
+                return super.formatLabel(value, isValueX);
+            }
+        });
+        /*mSeries1 = new LineGraphSeries<DataPoint>(new DataPoint[] {
                 new DataPoint(0, 1),
                 new DataPoint(1, 5),
                 new DataPoint(2, 3),
                 new DataPoint(3, 2),
                 new DataPoint(4, 6)
-        });
+        });*/
+        mSeries1 = new LineGraphSeries<DataPoint>();
         graph.addSeries(mSeries1);
-        mSeries1.appendData(new DataPoint(x++, counter++), true, 40);
+        //mSeries1.appendData(new DataPoint(x++, counter++), true, 400);
 
         return view;
     }
@@ -51,7 +83,10 @@ public class DataFragment extends Fragment {
         mTimer1 = new Runnable() {
             @Override
             public void run() {
-                mSeries1.appendData(new DataPoint(x++, counter++), false, 40);
+                if (VescData.get().queueSize() != 0)
+                        mSeries1.appendData(new DataPoint(VescData.get().getRecent().timestamp.getTime(), VescData.get().getRecent().batteryVoltage), false, 400);
+
+                //mSeries1.appendData(new DataPoint(x++, counter++), false, 400);
                 mHandler.postDelayed(this, 200);
             }
         };
@@ -80,5 +115,14 @@ public class DataFragment extends Fragment {
         mSeries1.appendData(new DataPoint(x++, counter++), false, 10);
     }
 
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        String item = (String) parent.getItemAtPosition(pos);
+        Log.i("spinner", item); //it is selected at startup. string 'item' here is the string from the string array corresponding to that item
+        //check if it is a certain parameter, then reset the plot to what was selected. 
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        //nothing i think
+    }
 
 }

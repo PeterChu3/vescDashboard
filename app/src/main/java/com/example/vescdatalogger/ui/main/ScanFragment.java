@@ -273,8 +273,7 @@ public class ScanFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_scan, container, false);
 
         Button scanButton = view.findViewById(R.id.button2);
-        writeUART = view.findViewById(R.id.button3);
-        readUART = view.findViewById(R.id.button4);
+
         scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

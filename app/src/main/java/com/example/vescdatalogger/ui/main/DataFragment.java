@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -83,9 +84,13 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
         mTimer1 = new Runnable() {
             @Override
             public void run() {
-                if (VescData.get().queueSize() != 0)
-                        mSeries1.appendData(new DataPoint(VescData.get().getRecent().timestamp.getTime(), VescData.get().getRecent().batteryVoltage), false, 400);
-
+                if (VescData.get().queueSize() != 0) {
+                    Message recentMessage = VescData.get().getRecent();
+                    mSeries1.appendData(new DataPoint(recentMessage.timestamp.getTime(), recentMessage.batteryVoltage), false, 400);
+                    TextView voltageText = (TextView) getView().findViewById(R.id.voltageText);
+                    String newVoltage = "Voltage: " + recentMessage.batteryVoltage;
+                    voltageText.setText(newVoltage);
+                }
                 //mSeries1.appendData(new DataPoint(x++, counter++), false, 400);
                 mHandler.postDelayed(this, 200);
             }
@@ -118,7 +123,7 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         String item = (String) parent.getItemAtPosition(pos);
         Log.i("spinner", item); //it is selected at startup. string 'item' here is the string from the string array corresponding to that item
-        //check if it is a certain parameter, then reset the plot to what was selected. 
+        //check if it is a certain parameter, then reset the plot to what was selected.
     }
 
     public void onNothingSelected(AdapterView<?> parent) {

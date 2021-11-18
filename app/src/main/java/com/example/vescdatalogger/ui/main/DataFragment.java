@@ -39,6 +39,8 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
     private Runnable mTimer1;
     private LineGraphSeries<DataPoint> mSeries1;
 
+    private static String currentParameter = "Battery Voltage"; //parameter currently plotted
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_data, container, false);
@@ -86,7 +88,11 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
             public void run() {
                 if (VescData.get().queueSize() != 0) {
                     Message recentMessage = VescData.get().getRecent();
-                    mSeries1.appendData(new DataPoint(recentMessage.timestamp.getTime(), recentMessage.batteryVoltage), false, 400);
+                    if (currentParameter == "Battery Voltage") {
+                        mSeries1.appendData(new DataPoint(recentMessage.timestamp.getTime(), recentMessage.batteryVoltage), false, 400);
+                        //call graphView.notifyDataSetChanged?
+                    }
+                    //set the last timestamp to this message's timestamp, don't add the new one if it is the same timestamp
                     TextView voltageText = (TextView) getView().findViewById(R.id.voltageText);
                     String newVoltage = "Voltage: " + recentMessage.batteryVoltage;
                     voltageText.setText(newVoltage);
@@ -116,14 +122,22 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
         }).start();*/
     }
 
-    private void addEntry() {
-        mSeries1.appendData(new DataPoint(x++, counter++), false, 10);
-    }
 
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         String item = (String) parent.getItemAtPosition(pos);
         Log.i("spinner", item); //it is selected at startup. string 'item' here is the string from the string array corresponding to that item
         //check if it is a certain parameter, then reset the plot to what was selected.
+        if (item.equals("MOSFET Temp") && !currentParameter.equals(item)) {
+            currentParameter = item;
+            DataPoint[] newData = new DataPoint[VescData.get().queueSize()];
+            Message thisMessage;
+            for (int i = 0; i < VescData.get().queueSize(); i++) {
+                thisMessage = VescData.get().at(i);
+                newData[i] = new DataPoint(thisMessage.timestamp, thisMessage.mosfetTemp);
+                Log.i("spinner", "added new mosfet temp data");
+            }
+            mSeries1.resetData(newData);
+        }
     }
 
     public void onNothingSelected(AdapterView<?> parent) {

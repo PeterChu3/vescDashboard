@@ -49,6 +49,8 @@ public class Message {
         Log.i("voltage hex 30", String.valueOf(bytes[30]));
         batteryVoltage = float16(bytes, 10, 29);
         Log.i("voltage", String.valueOf(batteryVoltage));
+        mosfetTemp = float16(bytes, 10, 3);
+        Log.i("mosfetTemp", String.valueOf(mosfetTemp));
     }
     private static float float16(byte[] bytes, float scale, int index) {
         int firstByte = ((bytes[index] << 8) & 0x0000ff00);

@@ -35,6 +35,8 @@ public class VescData {
         return messageQueue.size();
     }
 
+    public Message at(int i){return messageQueue.get(i);}
+
     private static VescData thisVescData;
 
     public static VescData get() {

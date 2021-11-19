@@ -101,6 +101,15 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
                     TextView voltageText = (TextView) getView().findViewById(R.id.voltageText);
                     String newVoltage = "Voltage: " + recentMessage.batteryVoltage;
                     voltageText.setText(newVoltage);
+                    TextView batteryCurrentText = (TextView) getView().findViewById(R.id.batteryCurrentText);
+                    String newCurrent = "Battery Current: " + recentMessage.batteryCurrent;
+                    batteryCurrentText.setText(newCurrent);
+                    TextView RPMText = (TextView) getView().findViewById(R.id.RPMText);
+                    String newRPM = "RPM: " + recentMessage.RPM;
+                    RPMText.setText(newRPM);
+                    TextView MOSFETTempText = (TextView) getView().findViewById(R.id.MOSFETTempText);
+                    String newMOSFETTemp = "MOSFET Temp: " + recentMessage.mosfetTemp;
+                    MOSFETTempText.setText(newMOSFETTemp);
                 }
                 //mSeries1.appendData(new DataPoint(x++, counter++), false, 400);
                 mHandler.postDelayed(this, 200);

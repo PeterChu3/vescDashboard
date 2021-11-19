@@ -132,14 +132,14 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
         String item = (String) parent.getItemAtPosition(pos);
         Log.i("spinner", item); //it is selected at startup. string 'item' here is the string from the string array corresponding to that item
         //check if it is a certain parameter, then reset the plot to what was selected.
-        if (item.equals("MOSFET Temp") && !currentParameter.equals(item)) {
+        if (!currentParameter.equals(item)) {
             currentParameter = item;
             DataPoint[] newData = new DataPoint[VescData.get().queueSize()];
             Message thisMessage;
             for (int i = 0; i < VescData.get().queueSize(); i++) {
                 thisMessage = VescData.get().at(i);
-                newData[i] = new DataPoint(thisMessage.timestamp, thisMessage.mosfetTemp);
-                Log.i("spinner", "added new mosfet temp data");
+                newData[i] = new DataPoint(thisMessage.timestamp, thisMessage.getParameter(item));
+                Log.i("spinner", "added new data for" + item);
             }
             mSeries1.resetData(newData);
         }

@@ -74,7 +74,10 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
         });*/
         mSeries1 = new LineGraphSeries<DataPoint>();
         graph.addSeries(mSeries1);
-        
+        Date startXAxis = new Date();
+        graph.getViewport().setMaxX(startXAxis.getTime());
+        graph.getViewport().setMinX(startXAxis.getTime() - 5000);
+        graph.getViewport().setXAxisBoundsManual(true);
         //mSeries1.appendData(new DataPoint(x++, counter++), true, 400);
 
         return view;
@@ -89,7 +92,10 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
             public void run() {
                 if (VescData.get().queueSize() != 0) {
                     Message recentMessage = VescData.get().getRecent();
-                    mSeries1.appendData(new DataPoint(recentMessage.timestamp.getTime(), recentMessage.getParameter(currentParameter)), false, 400);
+                    GraphView graph = (GraphView) getView().findViewById(R.id.graph);
+                    graph.getViewport().setMinX(recentMessage.timestamp.getTime() - 5000); //change this number to expand time window (in milliseconds)
+                    graph.getViewport().setMaxX(recentMessage.timestamp.getTime());
+                    mSeries1.appendData(new DataPoint(recentMessage.timestamp.getTime(), recentMessage.getParameter(currentParameter)), true, 400);
                         //call graphView.notifyDataSetChanged?
                     //set the last timestamp to this message's timestamp, don't add the new one if it is the same timestamp
                     TextView voltageText = (TextView) getView().findViewById(R.id.voltageText);

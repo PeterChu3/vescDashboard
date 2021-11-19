@@ -279,8 +279,10 @@ public class ScanFragment extends Fragment {
             public void onClick(View view) {
                 Log.i("ScanCallBack", "Scan button onclick");
                 if (!isScanning) {
+                    scanButton.setText("Stop");
                     startBLEscan();
                 } else {
+                    scanButton.setText("Scan");
                     stopBLEscan();
                 }
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)

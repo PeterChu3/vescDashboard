@@ -9,6 +9,10 @@
     <string-array name="parameter_array">
         <item>Battery Voltage</item>
         <item>MOSFET Temp</item>
-
+        <item>Battery Current</item>
+        <item>Motor Current</item>
+        <item>Duty Cycle</item>
+        <item>ERPM</item>
+        <item>Motor Temp</item>
     </string-array>
 </resources>

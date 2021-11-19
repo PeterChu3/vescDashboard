@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;
         tabs.setupWithViewPager(viewPager);
-        
+
 
         /*Button scanButton = findViewById(R.id.button2);
         scanButton.setOnClickListener(new View.OnClickListener() {

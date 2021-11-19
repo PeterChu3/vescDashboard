@@ -74,6 +74,7 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
         });*/
         mSeries1 = new LineGraphSeries<DataPoint>();
         graph.addSeries(mSeries1);
+        
         //mSeries1.appendData(new DataPoint(x++, counter++), true, 400);
 
         return view;
@@ -88,10 +89,8 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
             public void run() {
                 if (VescData.get().queueSize() != 0) {
                     Message recentMessage = VescData.get().getRecent();
-                    if (currentParameter == "Battery Voltage") {
-                        mSeries1.appendData(new DataPoint(recentMessage.timestamp.getTime(), recentMessage.batteryVoltage), false, 400);
+                    mSeries1.appendData(new DataPoint(recentMessage.timestamp.getTime(), recentMessage.getParameter(currentParameter)), false, 400);
                         //call graphView.notifyDataSetChanged?
-                    }
                     //set the last timestamp to this message's timestamp, don't add the new one if it is the same timestamp
                     TextView voltageText = (TextView) getView().findViewById(R.id.voltageText);
                     String newVoltage = "Voltage: " + recentMessage.batteryVoltage;

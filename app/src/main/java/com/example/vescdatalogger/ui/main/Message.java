@@ -17,7 +17,7 @@ public class Message {
     byte packetID;
     float mosfetTemp;
     float motorTemp;
-    float MotorCurrent;
+    float motorCurrent;
     float batteryCurrent;
     float Id;
     float Iq;
@@ -51,7 +51,34 @@ public class Message {
         Log.i("voltage", String.valueOf(batteryVoltage));
         mosfetTemp = float16(bytes, 10, 3);
         Log.i("mosfetTemp", String.valueOf(mosfetTemp));
+        motorTemp = float16(bytes, 10, 5);
+        motorCurrent = float32(bytes, 100, 7);
+        batteryCurrent = float32(bytes, 100, 11);
+        dutyCycle = float16(bytes, 1000, 23);
+        RPM = float32(bytes, 1, 25);
     }
+
+    public float getParameter(String parameterName) {
+        switch(parameterName) {
+            case "Battery Voltage":
+                return batteryVoltage;
+            case "MOSFET Temp":
+                return mosfetTemp;
+            case "Battery Current":
+                return batteryCurrent;
+            case "Motor Current":
+                return motorCurrent;
+            case "Duty Cycle":
+                return dutyCycle;
+            case "ERPM":
+                return RPM;
+            case "Motor Temp":
+                return motorTemp;
+            default:
+                return 0;
+        }
+    }
+
     private static float float16(byte[] bytes, float scale, int index) {
         int firstByte = ((bytes[index] << 8) & 0x0000ff00);
         int secondByte = (bytes[index + 1] & 0x000000ff);

@@ -217,7 +217,7 @@ public class ScanFragment extends Fragment {
                     //super.onScanResult(callbackType, result); //do you need the super call?
                     int indexQuery = -1;
                     for (int i = 0; i < scanResults.size(); i++) {
-                        if (scanResults.get(i).getDevice().getAddress() == result.getDevice().getAddress()) {
+                        if (scanResults.get(i).getDevice().getAddress().equals(result.getDevice().getAddress())) {
                             indexQuery = i;
                             break;
                         }
@@ -228,8 +228,15 @@ public class ScanFragment extends Fragment {
                         Log.i("ScanCallBack", "in if block");
                     } else {
                         Log.i("ScanCallBack", "Found BLE device: " + result.getDevice().getName() + ", address: " + result.getDevice().getAddress());
+                        /*for (int i = 0; i < scanResults.size(); i++) {
+                            if (scanResults.get(i).getDevice().getAddress().equals(result.getDevice().getAddress())) {
+                                scanResults.remove(i);
+                                //scanResultAdapter.notifyItemRemoved(i);
+                            }
+                        }*/
                         scanResults.add(result);
                         scanResultAdapter.notifyItemInserted(scanResults.size() - 1);
+                        //scanResultAdapter.notifyDataSetChanged();
                     }
                 }
 

@@ -36,6 +36,11 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
         }
 
         public void bind(ScanResult result) {
+            /*for (int i = 0; i < items.size(); i++) {
+                if (items.get(i).getDevice().getAddress().equals(result.getDevice().getAddress())) {
+                    Log.i("recycler", "duplicate BLE device " + result.getDevice().getAddress() + " " + items.size());
+                }
+            }*/
             if (result.getDevice().getName() == null || result.getDevice().getName().isEmpty()) {
                 device_name.setText("Unknown");
             } else device_name.setText(result.getDevice().getName());
@@ -51,7 +56,8 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int ViewType) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_scan_result, viewGroup, false);
-        return new ViewHolder(view);
+        ViewHolder holder = new ViewHolder(view);
+        return holder;
     }
 
     @Override
@@ -69,5 +75,15 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
 
         items = results;
         this.customListener = onClickListener;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 }

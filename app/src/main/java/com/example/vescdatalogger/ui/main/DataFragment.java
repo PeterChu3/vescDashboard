@@ -65,6 +65,7 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
                 return super.formatLabel(value, isValueX);
             }
         });
+        graph.getGridLabelRenderer().setPadding(32);
         /*mSeries1 = new LineGraphSeries<DataPoint>(new DataPoint[] {
                 new DataPoint(0, 1),
                 new DataPoint(1, 5),

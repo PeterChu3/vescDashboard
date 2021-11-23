@@ -64,8 +64,8 @@
         android:text="RPM: "
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHorizontal_bias="0.227"
+        app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteX="81dp" />
 
     <TextView

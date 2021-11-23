@@ -24,6 +24,7 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.text.Format;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -61,11 +62,15 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
                 if (isValueX) {
                     Format formatter = new SimpleDateFormat("h:mm a");
                     return formatter.format(value);
+                } else {
+                    NumberFormat nf = NumberFormat.getInstance();
+                    nf.setMaximumFractionDigits(1);
+                    return nf.format(value);
                 }
-                return super.formatLabel(value, isValueX);
+                //return super.formatLabel(value, isValueX);
             }
         });
-        graph.getGridLabelRenderer().setPadding(32);
+        graph.getGridLabelRenderer().setPadding(100);
         /*mSeries1 = new LineGraphSeries<DataPoint>(new DataPoint[] {
                 new DataPoint(0, 1),
                 new DataPoint(1, 5),

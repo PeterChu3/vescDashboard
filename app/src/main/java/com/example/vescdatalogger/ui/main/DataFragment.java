@@ -41,6 +41,7 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
     private LineGraphSeries<DataPoint> mSeries1;
 
     private static String currentParameter = "Battery Voltage"; //parameter currently plotted
+    private static int timeWindow_ms = 5000;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,12 +49,19 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
 
         mostRecentPlotted = new Date(0);
 
-        Spinner spinner = (Spinner) view.findViewById(R.id.parameter_spinner);
+        Spinner parameterSpinner = (Spinner) view.findViewById(R.id.parameter_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.parameter_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+        parameterSpinner.setAdapter(adapter);
+        parameterSpinner.setOnItemSelectedListener(this);
+
+        Spinner windowSpinner = (Spinner) view.findViewById(R.id.window_spinner);
+        ArrayAdapter<CharSequence> adapterWindow = ArrayAdapter.createFromResource(getContext(),
+                R.array.window_array, android.R.layout.simple_spinner_item);
+        adapterWindow.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        windowSpinner.setAdapter(adapterWindow);
+        windowSpinner.setOnItemSelectedListener(this);
 
         GraphView graph = (GraphView) view.findViewById(R.id.graph);
         graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
@@ -82,7 +90,7 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
         graph.addSeries(mSeries1);
         Date startXAxis = new Date();
         graph.getViewport().setMaxX(startXAxis.getTime());
-        graph.getViewport().setMinX(startXAxis.getTime() - 5000);
+        graph.getViewport().setMinX(startXAxis.getTime() - timeWindow_ms);
         graph.getViewport().setXAxisBoundsManual(true);
         //mSeries1.appendData(new DataPoint(x++, counter++), true, 400);
 
@@ -99,7 +107,7 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
                 if (VescData.get().queueSize() != 0) {
                     Message recentMessage = VescData.get().getRecent();
                     GraphView graph = (GraphView) getView().findViewById(R.id.graph);
-                    graph.getViewport().setMinX(recentMessage.timestamp.getTime() - 5000); //change this number to expand time window (in milliseconds)
+                    graph.getViewport().setMinX(recentMessage.timestamp.getTime() - timeWindow_ms); //change this number to expand time window (in milliseconds)
                     graph.getViewport().setMaxX(recentMessage.timestamp.getTime());
                     mSeries1.appendData(new DataPoint(recentMessage.timestamp.getTime(), recentMessage.getParameter(currentParameter)), true, 400);
                         //call graphView.notifyDataSetChanged?
@@ -147,7 +155,18 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
         String item = (String) parent.getItemAtPosition(pos);
         Log.i("spinner", item); //it is selected at startup. string 'item' here is the string from the string array corresponding to that item
         //check if it is a certain parameter, then reset the plot to what was selected.
-        if (!currentParameter.equals(item)) {
+        if (item.substring(item.length() - 1).equals("s")) {
+            int newTime = Integer.parseInt(item.substring(0, item.length()-1));
+            if (timeWindow_ms != newTime * 1000) { //need to change window size
+                timeWindow_ms = newTime * 1000;
+                if (VescData.get().queueSize() != 0) {
+                    Message recentMessage = VescData.get().getRecent();
+                    GraphView graph = (GraphView) getView().findViewById(R.id.graph);
+                    graph.getViewport().setMinX(recentMessage.timestamp.getTime() - timeWindow_ms); //change this number to expand time window (in milliseconds)
+                    graph.getViewport().setMaxX(recentMessage.timestamp.getTime());
+                }
+            }
+        } else if (!currentParameter.equals(item)) {
             currentParameter = item;
             DataPoint[] newData = new DataPoint[VescData.get().queueSize()];
             Message thisMessage;

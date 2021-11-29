@@ -58,6 +58,10 @@ public class Message {
         RPM = float32(bytes, 1, 25);
     }
 
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
     public float getParameter(String parameterName) {
         switch(parameterName) {
             case "Battery Voltage":

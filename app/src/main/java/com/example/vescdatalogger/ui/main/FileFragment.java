@@ -24,6 +24,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 public class FileFragment extends Fragment {
     private static final String TAG = "FileFragment";
@@ -31,6 +35,10 @@ public class FileFragment extends Fragment {
     private Runnable updateTimer;
     private final Handler handler = new Handler();
     private int test = 0;
+    private int WRITE_EXTERNAL_STORAGE_CODE = 23;
+    private int READ_EXTERNAL_STORAGE_CODE = 24;
+    private int MANAGE_EXTERNAL_STORAGE_CODE = 25;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,10 +101,31 @@ public class FileFragment extends Fragment {
 
     private void writeToFile(String data, Context context) {
         try {
+            if (!hasFileIOPermission()) {
+                requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE_CODE);
+                requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_CODE);
+                requestPermissions(new String[] {Manifest.permission.MANAGE_EXTERNAL_STORAGE}, MANAGE_EXTERNAL_STORAGE_CODE);
+            }
             File path = getContext().getApplicationContext().getFilesDir();
             //FileOutputStream writer = new FileOutputStream(new File(path, "file.txt"));
-            FileOutputStream writer = new FileOutputStream(new File("/storage/self/primary/Documents", "file.txt"));
-            writer.write("hello".getBytes());
+            Date date = new Date();
+            Format formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+            String fileName = formatter.format(date) + "_VESC.csv";
+            FileOutputStream writer = new FileOutputStream(new File("/storage/self/primary/Documents", fileName));
+            String outputText = "";
+            formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            for (int i = 0; i < VescData.get().queueSize(); i++) {
+                outputText += formatter.format(VescData.get().at(i).getTimestamp()) + ",";
+                outputText += VescData.get().at(i).getParameter("Battery Voltage") + ",";
+                outputText += VescData.get().at(i).getParameter("MOSFET Temp") + ",";
+                outputText += VescData.get().at(i).getParameter("Battery Current") + ",";
+                outputText += VescData.get().at(i).getParameter("Motor Current") + ",";
+                outputText += VescData.get().at(i).getParameter("Duty Cycle") + ",";
+                outputText += VescData.get().at(i).getParameter("RPM") + ",";
+                outputText += VescData.get().at(i).getParameter("Motor Temp") + ",";
+                outputText += "\n";
+            }
+            writer.write(outputText.getBytes());
             writer.close();
         } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
@@ -104,7 +133,9 @@ public class FileFragment extends Fragment {
     }
 
     private boolean hasFileIOPermission() {
-        return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        return (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+                && (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+                && (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.MANAGE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
     }
 
     private void requestFileIOPermission() {

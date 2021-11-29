@@ -16,15 +16,15 @@ public class VescData {
         //test = 1;
     }
 
-    float minBatteryCurrent;
-    float maxBatteryCurrent;
-    float avgBatteryCurrent;
-    float minRPM;
-    float maxRPM;
-    float avgRPM;
-    float minMosfetTemp;
-    float maxMosfetTemp;
-    float avgMosfetTemp;
+    public float minBatteryCurrent;
+    public float maxBatteryCurrent;
+    public float avgBatteryCurrent;
+    public float minRPM;
+    public float maxRPM;
+    public float avgRPM;
+    public float minMosfetTemp;
+    public float maxMosfetTemp;
+    public float avgMosfetTemp;
 
     /*public int getTest() {
         return test;
@@ -36,19 +36,19 @@ public class VescData {
         Log.i("messagequeue", "added a message");
         float avgCalc = 0;
         float newBatteryCurrent = newMessage.getParameter("Battery Current");
-        if (newBatteryCurrent < minBatteryCurrent) minBatteryCurrent = newBatteryCurrent;
-        else if (newBatteryCurrent > maxBatteryCurrent) maxBatteryCurrent = newBatteryCurrent;
+        if (newBatteryCurrent < minBatteryCurrent || oldSize == 0) minBatteryCurrent = newBatteryCurrent;
+        else if (newBatteryCurrent > maxBatteryCurrent || oldSize == 0) maxBatteryCurrent = newBatteryCurrent;
         avgCalc = ((avgBatteryCurrent * oldSize) + newBatteryCurrent) / newSize;
         avgBatteryCurrent = avgCalc;
         float newRPM = newMessage.getParameter("ERPM");
-        if (newRPM < minRPM) minRPM = newRPM;
-        else if (newBatteryCurrent > maxRPM) maxRPM = newRPM;
+        if (newRPM < minRPM || oldSize == 0) minRPM = newRPM;
+        else if (newBatteryCurrent > maxRPM || oldSize == 0) maxRPM = newRPM;
         avgCalc = ((avgRPM * oldSize) + newRPM) / newSize;
         avgRPM = avgCalc;
         float newMosfetTemp = newMessage.getParameter("MOSFET Temp");
         avgCalc = ((avgMosfetTemp * oldSize) + newMosfetTemp) / newSize;
-        if (newMosfetTemp < minMosfetTemp) minMosfetTemp = newMosfetTemp;
-        else if (newMosfetTemp > maxMosfetTemp) maxMosfetTemp = newMosfetTemp;
+        if (newMosfetTemp < minMosfetTemp || oldSize == 0) minMosfetTemp = newMosfetTemp;
+        else if (newMosfetTemp > maxMosfetTemp || oldSize == 0) maxMosfetTemp = newMosfetTemp;
         avgMosfetTemp = avgCalc;
     }
 

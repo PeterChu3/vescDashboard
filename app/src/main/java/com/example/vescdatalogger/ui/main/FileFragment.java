@@ -109,7 +109,7 @@ public class FileFragment extends Fragment {
             File path = getContext().getApplicationContext().getFilesDir();
             //FileOutputStream writer = new FileOutputStream(new File(path, "file.txt"));
             Date date = new Date();
-            Format formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+            Format formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm");
             String fileName = formatter.format(date) + "_VESC.csv";
             FileOutputStream writer = new FileOutputStream(new File("/storage/self/primary/Documents", fileName));
             String outputText = "";

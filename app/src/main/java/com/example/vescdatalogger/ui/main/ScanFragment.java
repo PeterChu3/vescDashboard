@@ -10,12 +10,7 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
-import android.bluetooth.le.ScanSettings;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -35,27 +30,18 @@ import com.example.vescdatalogger.R;
 import com.example.vescdatalogger.ScanResultAdapter;
 import com.example.vescdatalogger.UART;
 import com.example.vescdatalogger.VescData;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class ScanFragment extends Fragment {
-    private static final String TAG = "DataFragment";
     private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private BluetoothLeScanner bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
-    //private ScanSettings scanSettings = ScanSettings.Builder()
-    //scan filter
-    private int setResultNum = 0;
 
     private BluetoothGatt bluetoothGatt;
 
     private BluetoothGattCharacteristic UART_RX;
     private BluetoothGattCharacteristic UART_TX;
-
-    private Button writeUART; // can't do getView().findViewById(R.id.button3) here
-    private Button readUART;
 
     private List<ScanResult> scanResults = new ArrayList<>();
 
@@ -90,7 +76,6 @@ public class ScanFragment extends Fragment {
     private final BluetoothGattCallback bluetoothGattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            //super.onConnectionStateChange(gatt, status, newState);
             String deviceAddress = gatt.getDevice().getAddress();
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
@@ -116,13 +101,10 @@ public class ScanFragment extends Fragment {
                     Log.w("gattServices", service.getUuid().toString());
                     for (BluetoothGattCharacteristic gattCharacteristic : service.getCharacteristics()) {
                         Log.w("gattCharacteristic" , gattCharacteristic.getUuid().toString());
-                        if (gattCharacteristic.getUuid().toString().equals("00002a00-0000-1000-8000-00805f9b34fb")) {
-                            //readCharacteristic(gattCharacteristic);
-                        }
+
                         if (gattCharacteristic.getUuid().toString().equals("6e400002-b5a3-f393-e0a9-e50e24dcca9e")) {
                             UART_RX = gattCharacteristic;
                             Log.i("button check", gattCharacteristic.getUuid() + " " + gattCharacteristic.getProperties() + " " + gattCharacteristic.getPermissions());
-                            //writeCharacteristic(gattCharacteristic);
                             for (BluetoothGattDescriptor descriptor : gattCharacteristic.getDescriptors()) {
                                 Log.i("descriptors", descriptor.toString());
                             }
@@ -132,11 +114,6 @@ public class ScanFragment extends Fragment {
                             for (BluetoothGattDescriptor descriptor : gattCharacteristic.getDescriptors()) {
                                 Log.i("descriptors", descriptor.getUuid().toString());
                             }
-                            //readCharacteristic(gattCharacteristic);
-                            //gatt.readCharacteristic(gattCharacteristic);
-                            //gatt.setCharacteristicNotification(gattCharacteristic, true);
-                            //writeCharacteristic(UART_RX);
-                            //Log.i("gatt", "set characteristic notifications for TX");
                         }
                     }
                 }
@@ -156,10 +133,6 @@ public class ScanFragment extends Fragment {
             Log.i("gatt",  "onCharacteristic read"); //this does not print
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 Log.i("data", characteristic.getStringValue(0));
-                /*byte[] data = characteristic.getValue();
-                for (byte element : data) {
-                    Log.i("Data", element + "\n");
-                }*/
             }
         }
 
@@ -184,26 +157,12 @@ public class ScanFragment extends Fragment {
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             Log.i("write", characteristic.getUuid().toString() + " " + status);
-            //gatt.setCharacteristicNotification(UART_TX, true); //might need to set the descriptor to true first
-//            boolean notify = gatt.setCharacteristicNotification(UART_TX, true);
-//            Log.i("gatt", "set characteristic notifications for TX " + notify);
-//            BluetoothGattDescriptor descriptor = UART_TX.getDescriptors().get(0);
-//            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-//            gatt.writeDescriptor(descriptor);
-            //Log.i("gatt", "set characteristic notifications for TX" + UART_TX.getUuid().toString());
         }
 
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             Log.i("descriptor write", descriptor.getUuid().toString() + " " + status);
             writeCharacteristic(UART_RX);
-//            try {
-//                Thread.sleep(200);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            boolean notify = gatt.setCharacteristicNotification(UART_TX, true);
-//            Log.i("gatt", "set characteristic notifications for TX " + notify);
         }
 
     };
@@ -214,7 +173,6 @@ public class ScanFragment extends Fragment {
             new ScanCallback() {
                 @Override
                 public void onScanResult(int callbackType, ScanResult result) {
-                    //super.onScanResult(callbackType, result); //do you need the super call?
                     int indexQuery = -1;
                     for (int i = 0; i < scanResults.size(); i++) {
                         if (scanResults.get(i).getDevice().getAddress().equals(result.getDevice().getAddress())) {
@@ -228,15 +186,8 @@ public class ScanFragment extends Fragment {
                         Log.i("ScanCallBack", "in if block");
                     } else {
                         Log.i("ScanCallBack", "Found BLE device: " + result.getDevice().getName() + ", address: " + result.getDevice().getAddress());
-                        /*for (int i = 0; i < scanResults.size(); i++) {
-                            if (scanResults.get(i).getDevice().getAddress().equals(result.getDevice().getAddress())) {
-                                scanResults.remove(i);
-                                //scanResultAdapter.notifyItemRemoved(i);
-                            }
-                        }*/
                         scanResults.add(result);
                         scanResultAdapter.notifyItemInserted(scanResults.size() - 1);
-                        //scanResultAdapter.notifyDataSetChanged();
                     }
                 }
 
@@ -271,9 +222,6 @@ public class ScanFragment extends Fragment {
         isScanning = false;
     }
 
-    /*private void setupRecyclerView() {
-        RecyclerView rvDevices = (RecyclerView) findViewById(R.id.scan_results_recycler_view);
-    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -292,8 +240,6 @@ public class ScanFragment extends Fragment {
                     scanButton.setText("Scan");
                     stopBLEscan();
                 }
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                       // .setAction("Action", null).show();
             }
         });
         //setup recycler view
@@ -302,14 +248,7 @@ public class ScanFragment extends Fragment {
         rvDevices.setLayoutManager(new LinearLayoutManager(getContext()));
         rvDevices.setNestedScrollingEnabled(false);
 
-        //RecyclerView.ItemAnimator animator = rvDevices.getItemAnimator();
         //set onclicklistener here
-
-        //hard code the characteristic? hopefully it works
-        UUID rxUUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
-        BluetoothGattCharacteristic hardcodeUART_RX = new BluetoothGattCharacteristic(rxUUID, 12, 0);
-        UUID txUUID = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
-        BluetoothGattCharacteristic hardcodeUART_TX = new BluetoothGattCharacteristic(txUUID, 16, 0);
 
         return view;
     }
@@ -332,31 +271,5 @@ public class ScanFragment extends Fragment {
         boolean success = bluetoothGatt.writeCharacteristic(characteristic);
         Log.i("gatt", "write characteristic " + success);
     }
-
-    private void readCharacteristic(BluetoothGattCharacteristic characteristic) { //not used
-        bluetoothGatt.readCharacteristic(characteristic);
-        Log.i("gatt", "read characteristic");
-    }
-
-
-
-    /*private final BroadcastReceiver gattUpdateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-            if (action.equals("gatt connected")) {
-                //connected = true;
-            } else if (action.equals("gatt disconnected")) {
-                //connected = false
-            } else if (action.equals("gatt services discovered")) {
-                //display gatt services
-            }
-        }
-    };
-
-    private void broadcastUpdate(final String action) {
-        final Intent intent = new Intent(action);
-        sendBroadcast(intent);
-    }*/
 
 }

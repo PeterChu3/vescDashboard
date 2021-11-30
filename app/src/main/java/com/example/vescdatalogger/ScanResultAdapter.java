@@ -1,7 +1,6 @@
 package com.example.vescdatalogger;
 
 import android.bluetooth.le.ScanResult;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vescdatalogger.ui.main.ScanFragment;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.ViewHolder> {
@@ -21,7 +17,7 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
     private List<ScanResult> items;
     private ScanFragment.customListener customListener;
 
-    public class ViewHolder extends RecyclerView.ViewHolder { //does it need to be static?
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView device_name;
         public TextView mac_address;
         public TextView signal_strength;
@@ -36,11 +32,6 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
         }
 
         public void bind(ScanResult result) {
-            /*for (int i = 0; i < items.size(); i++) {
-                if (items.get(i).getDevice().getAddress().equals(result.getDevice().getAddress())) {
-                    Log.i("recycler", "duplicate BLE device " + result.getDevice().getAddress() + " " + items.size());
-                }
-            }*/
             if (result.getDevice().getName() == null || result.getDevice().getName().isEmpty()) {
                 device_name.setText("Unknown");
             } else device_name.setText(result.getDevice().getName());

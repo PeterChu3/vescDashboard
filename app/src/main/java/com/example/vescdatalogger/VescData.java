@@ -5,15 +5,12 @@ import android.util.Log;
 import com.example.vescdatalogger.ui.main.Message;
 
 import java.util.LinkedList;
-import java.util.Queue;
 
 public class VescData {
-    //private int test;
 
     private LinkedList<Message> messageQueue = new LinkedList<>();
 
     private VescData(){
-        //test = 1;
     }
 
     public float minBatteryCurrent;
@@ -26,9 +23,7 @@ public class VescData {
     public float maxMosfetTemp;
     public float avgMosfetTemp;
 
-    /*public int getTest() {
-        return test;
-    }*/
+
     public void addMessage(Message newMessage) {
         int oldSize = messageQueue.size();
         messageQueue.add(newMessage);

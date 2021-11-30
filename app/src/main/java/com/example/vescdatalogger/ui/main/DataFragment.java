@@ -1,9 +1,7 @@
 package com.example.vescdatalogger.ui.main;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +13,6 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.vescdatalogger.MainActivity;
 import com.example.vescdatalogger.R;
 import com.example.vescdatalogger.VescData;
 import com.jjoe64.graphview.DefaultLabelFormatter;
@@ -30,9 +27,6 @@ import java.util.Date;
 
 public class DataFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     private static final String TAG = "DataFragment";
-
-    public static int counter = 1;
-    public static int x = 5;
 
     private static Date mostRecentPlotted;
 
@@ -75,24 +69,15 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
                     nf.setMaximumFractionDigits(1);
                     return nf.format(value);
                 }
-                //return super.formatLabel(value, isValueX);
             }
         });
         graph.getGridLabelRenderer().setPadding(100);
-        /*mSeries1 = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6)
-        });*/
         mSeries1 = new LineGraphSeries<DataPoint>();
         graph.addSeries(mSeries1);
         Date startXAxis = new Date();
         graph.getViewport().setMaxX(startXAxis.getTime());
         graph.getViewport().setMinX(startXAxis.getTime() - timeWindow_ms);
         graph.getViewport().setXAxisBoundsManual(true);
-        //mSeries1.appendData(new DataPoint(x++, counter++), true, 400);
 
         return view;
     }
@@ -110,7 +95,6 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
                     graph.getViewport().setMinX(recentMessage.timestamp.getTime() - timeWindow_ms); //change this number to expand time window (in milliseconds)
                     graph.getViewport().setMaxX(recentMessage.timestamp.getTime());
                     mSeries1.appendData(new DataPoint(recentMessage.timestamp.getTime(), recentMessage.getParameter(currentParameter)), true, 400);
-                        //call graphView.notifyDataSetChanged?
                     //set the last timestamp to this message's timestamp, don't add the new one if it is the same timestamp
                     TextView voltageText = (TextView) getView().findViewById(R.id.voltageText);
                     String newVoltage = "Voltage: " + recentMessage.batteryVoltage;
@@ -125,29 +109,10 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
                     String newMOSFETTemp = "MOSFET Temp: " + recentMessage.mosfetTemp;
                     MOSFETTempText.setText(newMOSFETTemp);
                 }
-                //mSeries1.appendData(new DataPoint(x++, counter++), false, 400);
                 mHandler.postDelayed(this, 200);
             }
         };
         mHandler.postDelayed(mTimer1, 1000);
-        /*new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 100; i++) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            addEntry();
-                        }
-                    });
-                    try {
-                        Thread.sleep(600);
-                    } catch (InterruptedException e) {
-
-                    }
-                }
-            }
-        }).start();*/
     }
 
 
@@ -180,7 +145,6 @@ public class DataFragment extends Fragment implements AdapterView.OnItemSelected
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
-        //nothing i think
     }
 
 }

@@ -3,7 +3,7 @@ package com.example.vescdatalogger;
 
 
 public class UART {
-    public static final int COMM_GET_VALUES = 4; //might've changed
+    public static final int COMM_GET_VALUES = 4;
     public static final int COMM_GET_VALUES_SETUP_SELECTIVE = 51;
 
 
@@ -39,7 +39,7 @@ public class UART {
             0x6e17, 0x7e36, 0x4e55, 0x5e74, 0x2e93, 0x3eb2, 0x0ed1, 0x1ef0
     };
 
-    public static char crc16(byte[] buf, int len) { //how to test?
+    public static char crc16(byte[] buf, int len) {
         int i;
         char cksum = 0;
         for (i = 0; i < len; i++) {

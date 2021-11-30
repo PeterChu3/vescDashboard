@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -22,8 +21,6 @@ import com.example.vescdatalogger.VescData;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -106,8 +103,6 @@ public class FileFragment extends Fragment {
                 requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_CODE);
                 requestPermissions(new String[] {Manifest.permission.MANAGE_EXTERNAL_STORAGE}, MANAGE_EXTERNAL_STORAGE_CODE);
             }
-            File path = getContext().getApplicationContext().getFilesDir();
-            //FileOutputStream writer = new FileOutputStream(new File(path, "file.txt"));
             Date date = new Date();
             Format formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm");
             String fileName = formatter.format(date) + "_VESC.csv";
@@ -136,10 +131,6 @@ public class FileFragment extends Fragment {
         return (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
                 && (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
                 && (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.MANAGE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
-    }
-
-    private void requestFileIOPermission() {
-
     }
 
 }

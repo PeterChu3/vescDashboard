@@ -5,15 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Message {
-    /*
-    public static void main(String args[])
-    {
-        byte[] bytes = {(byte)0x00, (byte)0xFF, (byte)0x6F,(byte)0xFF,(byte)0xFF,(byte)0xFF};
-        System.out.println(float16(bytes, 10, 0));
-        System.out.println(float32(bytes, 10, 2));
-        System.out.println(int16(bytes, 0));
-        System.out.println(int32(bytes, 2));
-    }*/
+
     byte packetID;
     float mosfetTemp;
     float motorTemp;

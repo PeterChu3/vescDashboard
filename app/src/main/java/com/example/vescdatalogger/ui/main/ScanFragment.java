@@ -12,6 +12,7 @@ import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -20,6 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -27,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vescdatalogger.LocationPermissionFragment;
+import com.example.vescdatalogger.MainActivity;
 import com.example.vescdatalogger.R;
 import com.example.vescdatalogger.ScanResultAdapter;
 import com.example.vescdatalogger.UART;
@@ -51,8 +55,6 @@ public class ScanFragment extends Fragment {
     private BluetoothGattCharacteristic UART_RX;
     private BluetoothGattCharacteristic UART_TX;
 
-    private Button writeUART; // can't do getView().findViewById(R.id.button3) here
-    private Button readUART;
 
     private List<ScanResult> scanResults = new ArrayList<>();
 
@@ -264,18 +266,17 @@ public class ScanFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_scan, container, false);
-
-        Button scanButton = view.findViewById(R.id.button2);
-        writeUART = view.findViewById(R.id.button3);
-        readUART = view.findViewById(R.id.button4);
+        Button scanButton = view.findViewById(R.id.buttonScanStop);
         scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.i("ScanCallBack", "Scan button onclick");
                 if (!isScanning) {
                     startBLEscan();
+                    scanButton.setText("Stop Scan");
                 } else {
                     stopBLEscan();
+                    scanButton.setText("Scan");
                 }
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                        // .setAction("Action", null).show();
@@ -289,7 +290,6 @@ public class ScanFragment extends Fragment {
 
         //RecyclerView.ItemAnimator animator = rvDevices.getItemAnimator();
         //set onclicklistener here
-
         //hard code the characteristic? hopefully it works
         UUID rxUUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
         BluetoothGattCharacteristic hardcodeUART_RX = new BluetoothGattCharacteristic(rxUUID, 12, 0);

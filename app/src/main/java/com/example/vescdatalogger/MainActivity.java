@@ -1,30 +1,20 @@
 package com.example.vescdatalogger;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 
-import com.example.vescdatalogger.ui.main.DataFragment;
-import com.example.vescdatalogger.ui.main.FileFragment;
+import com.example.vescdatalogger.ui.main.ConfigFragment;
+import com.example.vescdatalogger.ui.main.DashboardFragment;
 import com.example.vescdatalogger.ui.main.ScanFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
 import com.example.vescdatalogger.ui.main.SectionsPagerAdapter;
 import com.example.vescdatalogger.databinding.ActivityMainBinding;
@@ -60,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         sectionsPagerAdapter.addFragment(new ScanFragment());
-        sectionsPagerAdapter.addFragment(new DataFragment());
-        sectionsPagerAdapter.addFragment(new FileFragment());
+        sectionsPagerAdapter.addFragment(new ConfigFragment());
+        sectionsPagerAdapter.addFragment(new DashboardFragment());
         ViewPager viewPager = binding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;

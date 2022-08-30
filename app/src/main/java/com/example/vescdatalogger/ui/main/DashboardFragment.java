@@ -9,12 +9,12 @@ import androidx.fragment.app.Fragment;
 
 import com.example.vescdatalogger.R;
 
-public class FileFragment extends Fragment {
+public class DashboardFragment extends Fragment {
     private static final String TAG = "FileFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_file, container, false);
+        View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         return view;
     }

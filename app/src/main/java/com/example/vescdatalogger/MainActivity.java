@@ -37,14 +37,6 @@ public class MainActivity extends AppCompatActivity {
 
     private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-
-
-    private void requestLocationPermission() {
-        LocationPermissionFragment locationAlert = new LocationPermissionFragment();
-        locationAlert.show(getSupportFragmentManager(), "locationAlertDialog");
-    }
-
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -58,9 +50,6 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(enableBtIntent, ENABLE_BLUETOOTH_REQUEST_CODE);
     }
 
-    private boolean hasLocationPermission() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,14 +76,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*Button scanButton = findViewById(R.id.button2);
-        scanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //startBLEscan();
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
     }
 }

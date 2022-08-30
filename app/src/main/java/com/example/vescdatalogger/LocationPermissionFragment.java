@@ -8,6 +8,9 @@ import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
 
+/**
+ * Asks the user to turn on Location because BLE requires location
+ */
 public class LocationPermissionFragment extends DialogFragment {
 
     private final int LOCATION_PERMISSION_REQUEST_CODE = 2;

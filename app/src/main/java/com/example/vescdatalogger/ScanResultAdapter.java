@@ -16,6 +16,10 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is for the scan results on the recyclerView of the UI. This allows the user to see
+ * and select the device the user wants to connect to.
+ */
 public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.ViewHolder> {
 
     private List<ScanResult> items;

@@ -10,12 +10,7 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
-import android.bluetooth.le.ScanSettings;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -34,13 +29,14 @@ import com.example.vescdatalogger.LocationPermissionFragment;
 import com.example.vescdatalogger.R;
 import com.example.vescdatalogger.ScanResultAdapter;
 import com.example.vescdatalogger.UART;
-import com.example.vescdatalogger.VescData;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * The Scan Fragment is the code where the user connects to the VESC. It is admittly cluttered.
+ */
 public class ScanFragment extends Fragment {
     private static final String TAG = "DataFragment";
     private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();

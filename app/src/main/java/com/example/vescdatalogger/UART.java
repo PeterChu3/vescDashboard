@@ -1,11 +1,12 @@
 package com.example.vescdatalogger;
 
 
-
+/**
+ * This java class is a bunch of helper values for VESC UART
+ */
 public class UART {
     public static final int COMM_GET_VALUES = 4; //might've changed
     public static final int COMM_GET_VALUES_SETUP_SELECTIVE = 51;
-
 
     private static char[] crc16_tab = {
             0x0000, 0x1021, 0x2042, 0x3063, 0x4084,
@@ -39,6 +40,12 @@ public class UART {
             0x6e17, 0x7e36, 0x4e55, 0x5e74, 0x2e93, 0x3eb2, 0x0ed1, 0x1ef0
     };
 
+    /**
+     * CRC code for the VESC
+     * @param buf the start of the buffer
+     * @param len the length
+     * @return returns the checksum
+     */
     public static char crc16(byte[] buf, int len) { //how to test?
         int i;
         char cksum = 0;

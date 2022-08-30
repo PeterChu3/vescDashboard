@@ -1,5 +1,8 @@
 package com.example.vescdatalogger.ui.main;
 
+/**
+ * This is
+ */
 public class Message {
     /*
     public static void main(String args[])

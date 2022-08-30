@@ -6,7 +6,8 @@ package com.example.vescdatalogger;
  */
 public class UART {
     public static final int COMM_GET_VALUES = 4; //might've changed
-    public static final int COMM_GET_VALUES_SETUP_SELECTIVE = 51;
+    public static final int COMM_GET_VALUES_SETUP_SELECTIVE = 50;
+    public static final byte GetValues[] = {2,1,UART.COMM_GET_VALUES,0,0,0,1, 64,-124, 3};
 
     private static char[] crc16_tab = {
             0x0000, 0x1021, 0x2042, 0x3063, 0x4084,

@@ -58,7 +58,7 @@ public class ScanFragment extends Fragment {
 
 
     private List<ScanResult> scanResults = new ArrayList<>();
-
+    private Message globalMessage = new Message();
     public class customListener implements View.OnClickListener {
         ScanResult result;
 
@@ -169,11 +169,11 @@ public class ScanFragment extends Fragment {
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             Log.i("gatt",  "onCharacteristicChanged");
             byte[] data = characteristic.getValue();
-            for (byte element : data) {
-                Log.i("Data_O", element + "\n");
-            }
+//            for (byte element : data) {
+//                Log.i("Data_O", element + "\n");
+//            }
             SystemClock.sleep(500);
-            //Message.parse(data);
+            globalMessage.addBytes(data, data.length);
             writeCharacteristic(UART_RX);
         }
 

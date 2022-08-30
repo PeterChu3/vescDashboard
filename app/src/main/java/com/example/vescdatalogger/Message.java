@@ -9,21 +9,53 @@ public class Message {
     byte packetID;
     float RPM;
     float batteryVoltage;
+    byte[] previousglobalbytes = new byte[12];
+    byte[] globalbytes = new byte[12];
 
     Date timestamp;
+    int index = 0;
 
-    public Message(byte[] bytes) {
-        batteryVoltage = float16(bytes, 10, 29);
-        Log.i("voltage", String.valueOf(batteryVoltage));
-        RPM = float32(bytes, 1, 25);
-        Log.i("RPM", String.valueOf(RPM));
+    public Message() {
+
+
+//        batteryVoltage = float16(bytes, 10, 29);
+//        Log.i("voltage", String.valueOf(batteryVoltage));
+//        RPM = float32(bytes, 1, 25);
+//        Log.i("RPM", String.valueOf(RPM));
 
     }
+    public void addBytes(byte[] bytes, int length) {
+        if (bytes[0] == 2) {
+            addNew(bytes, length);
+        } else {
+            addOld(bytes, length);
+        }
 
+    }
+    public void addNew(byte[] bytes, int length) {
+        for (int i = 0; i < globalbytes.length; i++) {
+            previousglobalbytes[i] = globalbytes[i];
+        }
+        printGoodMessage();
+        for (int i = 0; i < length; i++) {
+            globalbytes[i] = bytes[i];
+        }
+        index = length;
+    }
+    public void addOld(byte[] bytes, int length) {
+        for (int i = 0; i < length; i++) {
+            globalbytes[i + index] = bytes[i];
+        }
+        index = length + index;
+    }
     public Date getTimestamp() {
         return timestamp;
     }
-
+    public void printGoodMessage() {
+        for (byte element : globalbytes) {
+            Log.i("Data_Message", element + "\n");
+        }
+    }
     public float getParameter(String parameterName) {
         switch(parameterName) {
             case "Battery Voltage":

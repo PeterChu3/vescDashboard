@@ -1,6 +1,7 @@
 package com.example.vescdatalogger.ui.main;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
@@ -68,6 +69,7 @@ public class ScanFragment extends Fragment {
             this.result = result;
             Log.i("customSetResult", "setResult");
         }
+        @SuppressLint("MissingPermission")
         @Override
         public void onClick(View view) {
             Log.i("viewholderOnclick", "clicked it! from custom");
@@ -85,6 +87,7 @@ public class ScanFragment extends Fragment {
 
     private final BluetoothGattCallback bluetoothGattCallback = new BluetoothGattCallback() {
         @Override
+        @SuppressLint("MissingPermission")
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             //super.onConnectionStateChange(gatt, status, newState);
             String deviceAddress = gatt.getDevice().getAddress();
@@ -103,7 +106,7 @@ public class ScanFragment extends Fragment {
                 }
             }
         }
-
+        @SuppressLint("MissingPermission")
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
@@ -202,6 +205,7 @@ public class ScanFragment extends Fragment {
     private ScanCallback leScanCallback =
             new ScanCallback() {
                 @Override
+                @SuppressLint("MissingPermission")
                 public void onScanResult(int callbackType, ScanResult result) {
                     //super.onScanResult(callbackType, result); //do you need the super call?
                     int indexQuery = -1;
@@ -236,7 +240,7 @@ public class ScanFragment extends Fragment {
         LocationPermissionFragment locationAlert = new LocationPermissionFragment();
         locationAlert.show(getFragmentManager(), "locationAlertDialog");
     }
-
+    @SuppressLint("MissingPermission")
     private void startBLEscan() {
         if (!hasLocationPermission()) {
             requestLocationPermission();
@@ -247,7 +251,7 @@ public class ScanFragment extends Fragment {
             isScanning = true;
         }
     }
-
+    @SuppressLint("MissingPermission")
     private void stopBLEscan() {
         bluetoothLeScanner.stopScan(leScanCallback);
         isScanning = false;
@@ -294,7 +298,7 @@ public class ScanFragment extends Fragment {
 
         return view;
     }
-
+    @SuppressLint("MissingPermission")
     private void writeCharacteristic(BluetoothGattCharacteristic characteristic) {
         characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
         byte writeValue[] = new byte[6];
@@ -313,31 +317,12 @@ public class ScanFragment extends Fragment {
         boolean success = bluetoothGatt.writeCharacteristic(characteristic);
         Log.i("gatt", "write characteristic " + success);
     }
-
+    @SuppressLint("MissingPermission")
     private void readCharacteristic(BluetoothGattCharacteristic characteristic) { //not used
         bluetoothGatt.readCharacteristic(characteristic);
         Log.i("gatt", "read characteristic");
     }
 
 
-
-    /*private final BroadcastReceiver gattUpdateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-            if (action.equals("gatt connected")) {
-                //connected = true;
-            } else if (action.equals("gatt disconnected")) {
-                //connected = false
-            } else if (action.equals("gatt services discovered")) {
-                //display gatt services
-            }
-        }
-    };
-
-    private void broadcastUpdate(final String action) {
-        final Intent intent = new Intent(action);
-        sendBroadcast(intent);
-    }*/
 
 }

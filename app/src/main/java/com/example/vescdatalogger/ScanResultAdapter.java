@@ -1,5 +1,6 @@
 package com.example.vescdatalogger;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.le.ScanResult;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,6 +40,7 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
 
         }
 
+        @SuppressLint("MissingPermission")
         public void bind(ScanResult result) {
             if (result.getDevice().getName() == null || result.getDevice().getName().isEmpty()) {
                 device_name.setText("Unknown");

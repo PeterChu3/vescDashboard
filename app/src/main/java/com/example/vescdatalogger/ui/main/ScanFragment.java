@@ -54,7 +54,7 @@ public class ScanFragment extends Fragment {
 
 
     private List<ScanResult> scanResults = new ArrayList<>();
-    private Message globalMessage = new Message();
+    public Message globalMessage = Message.get();
     public class customListener implements View.OnClickListener {
         ScanResult result;
 

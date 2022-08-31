@@ -32,14 +32,21 @@ public class Message {
 
     }
     public void printSpeed() {
-        batteryVoltage = float32(previousglobalbytes, 1,7);
-        Log.i("Speed ", String.valueOf(batteryVoltage));
+        RPM = float32(previousglobalbytes, 1,7);
+        Log.i("Speed ", String.valueOf(RPM));
     }
     public void printBattery() {
         batteryVoltage = float16(previousglobalbytes, 10,11);
         Log.i("Battery Voltage ", String.valueOf(batteryVoltage));
     }
-
+    public float getSpeed() {
+        batteryVoltage = float32(previousglobalbytes, 1,7);
+        return batteryVoltage;
+    }
+    public float getBattery() {
+        RPM = float16(previousglobalbytes, 10,11);
+        return RPM;
+    }
     public void addNew(byte[] bytes, int length) {
         for (int i = 0; i < globalbytes.length; i++) {
             previousglobalbytes[i] = globalbytes[i];
@@ -101,6 +108,14 @@ public class Message {
         int forthByte = ((bytes[index + 3]) & 0x000000ff);
         int res = firstByte | secondByte | thirdByte | forthByte;
         return res;
+    }
+    public static Message thisMessage;
+
+    public static Message get() {
+        if (thisMessage == null) {
+            thisMessage = new Message();
+        }
+        return thisMessage;
     }
 
 }

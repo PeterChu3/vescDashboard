@@ -7,10 +7,12 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.vescdatalogger.Message;
 import com.example.vescdatalogger.R;
 
 public class DashboardFragment extends Fragment {
     private static final String TAG = "FileFragment";
+    public Message globalMessage = Message.get();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

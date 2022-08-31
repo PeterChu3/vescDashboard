@@ -50,7 +50,7 @@ public class UART {
     public static char crc16(byte[] buf, int len) { //how to test?
         int i;
         char cksum = 0;
-        for (i = 0; i < len; i++) {
+        for (i = 2; i < len + 2; i++) {
             cksum = (char) (crc16_tab[((cksum >>> 8) ^ buf[i]) & 0xFF] ^ (cksum << 8));
         }
         return cksum;

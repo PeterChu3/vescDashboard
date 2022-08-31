@@ -6,11 +6,10 @@ import java.util.Date;
 
 public class Message {
 
-    byte packetID;
     float RPM;
     float batteryVoltage;
-    byte[] previousglobalbytes = new byte[12];
-    byte[] globalbytes = new byte[12];
+    byte[] previousglobalbytes = new byte[20];
+    byte[] globalbytes = new byte[20];
 
     Date timestamp;
     int index = 0;
@@ -32,11 +31,19 @@ public class Message {
         }
 
     }
+    public void printSpeed() {
+        batteryVoltage = float32(previousglobalbytes, 1,7);
+        Log.i("Speed ", String.valueOf(batteryVoltage));
+    }
+    public void printBattery() {
+        batteryVoltage = float16(previousglobalbytes, 10,11);
+        Log.i("Battery Voltage ", String.valueOf(batteryVoltage));
+    }
+
     public void addNew(byte[] bytes, int length) {
         for (int i = 0; i < globalbytes.length; i++) {
             previousglobalbytes[i] = globalbytes[i];
         }
-        printGoodMessage();
         for (int i = 0; i < length; i++) {
             globalbytes[i] = bytes[i];
         }

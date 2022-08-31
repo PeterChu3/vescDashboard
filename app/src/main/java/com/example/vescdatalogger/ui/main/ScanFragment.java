@@ -12,7 +12,6 @@ import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -21,8 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -30,7 +27,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vescdatalogger.LocationPermissionFragment;
-import com.example.vescdatalogger.MainActivity;
 import com.example.vescdatalogger.Message;
 import com.example.vescdatalogger.R;
 import com.example.vescdatalogger.ScanResultAdapter;
@@ -170,10 +166,13 @@ public class ScanFragment extends Fragment {
             Log.i("gatt",  "onCharacteristicChanged");
             byte[] data = characteristic.getValue();
 //            for (byte element : data) {
-//                Log.i("Data_O", element + "\n");
+//                Log.i("Data_OUT", element + "\n");
 //            }
             SystemClock.sleep(500);
             globalMessage.addBytes(data, data.length);
+            globalMessage.printBattery();
+            globalMessage.printSpeed();
+            //globalMessage.printGoodMessage();
             writeCharacteristic(UART_RX);
         }
 
@@ -318,13 +317,10 @@ public class ScanFragment extends Fragment {
         writeValue[5] = 3;
 
          */
-        byte writeValue[] = {2,5,UART.COMM_GET_VALUES_SETUP_SELECTIVE,0,0,1,0, 123, 92, 3};
-
-        byte CRCValue[] = {UART.COMM_GET_VALUES_SETUP_SELECTIVE,0,0,1,0};
-
-        char crc = UART.crc16(CRCValue,5);
-        Log.i("crcOUTBOUND", "crc MSB is " + (byte) (crc >>> 8)); //goes first
-        Log.i("crcOUTBOUND", "crc LSB is " + (byte) (crc & 0xFF)); //goes last
+        byte writeValue[] = {2,5,UART.COMM_GET_VALUES_SETUP_SELECTIVE,0,0,1,-128, 0, 0, 3};
+        char crc = UART.crc16(writeValue,5);
+        writeValue[7] = (byte) (crc >>> 8);
+        writeValue[8] = (byte) (crc & 0xFF);
         characteristic.setValue(writeValue);
         boolean success = bluetoothGatt.writeCharacteristic(characteristic);
         Log.i("gatt", "write characteristic " + success);

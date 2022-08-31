@@ -8,7 +8,7 @@ public class Message {
     byte[] globalbytes = new byte[20];
 
     int index = 0;
-
+    public boolean isConnected = false;
     public Message() {
     }
     public void addBytes(byte[] bytes, int length) {

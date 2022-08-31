@@ -14,7 +14,7 @@
         tools:layout_editor_absoluteY="1dp">
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/rpmView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -27,7 +27,7 @@
             tools:ignore="TextContrastCheck" />
 
         <TextView
-            android:id="@+id/Battery"
+            android:id="@+id/batteryView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

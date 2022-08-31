@@ -95,13 +95,16 @@ public class ScanFragment extends Fragment {
                     Log.w("BluetoothGattCallback", "Successfully connected to " + deviceAddress);
                     //store a reference to bluetoothgatt
                     gatt.discoverServices();
+                    globalMessage.isConnected = true;
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     Log.w("BluetoothGattCallback", "Successfully disconnected from " + deviceAddress);
                     gatt.close();
+                    globalMessage.isConnected = false;
                 }
                 else {
                     Log.w("BluetoothGattCallback", "Error " + status + " encountered for " + deviceAddress + "! Disconnecting...");
                     gatt.close();
+                    globalMessage.isConnected = false;
                 }
             }
         }
@@ -168,7 +171,7 @@ public class ScanFragment extends Fragment {
 //            for (byte element : data) {
 //                Log.i("Data_OUT", element + "\n");
 //            }
-            SystemClock.sleep(500);
+            SystemClock.sleep(50);
             globalMessage.addBytes(data, data.length);
             globalMessage.printBattery();
             globalMessage.printSpeed();

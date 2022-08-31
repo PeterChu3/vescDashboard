@@ -282,8 +282,6 @@ public class ScanFragment extends Fragment {
                     stopBLEscan();
                     scanButton.setText("Scan");
                 }
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                       // .setAction("Action", null).show();
             }
         });
         //setup recycler view

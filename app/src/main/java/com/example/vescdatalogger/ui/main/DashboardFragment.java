@@ -2,6 +2,7 @@ package com.example.vescdatalogger.ui.main;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.vescdatalogger.Message;
 import com.example.vescdatalogger.R;
+
+import java.text.DecimalFormat;
 
 public class DashboardFragment extends Fragment {
     private final Handler mhandler = new Handler();
@@ -30,26 +33,36 @@ public class DashboardFragment extends Fragment {
         mTimer1 = new Runnable() {
             @Override
             public void run() {
-                if (globalMessage.isConnected) {
-                    batteryVoltage = globalMessage.getBattery();
-                    ERPM = globalMessage.getSpeed();
+                try {
+                    if (globalMessage.isConnected) {
+                        batteryVoltage = globalMessage.getBattery();
+                        ERPM = globalMessage.getSpeed() / 7;
+                        DecimalFormat df = new DecimalFormat("#.#");
+                        String batPercentage = df.format(((batteryVoltage-(3.3 * 12))/12)*100); //Change this to run withMechSetup
+                        String velocity = df.format(ERPM * 3.142 * (60.0/1609.0) * 0.305 * (11.0/66.0));
+                        Log.i("OUT_velocity", velocity);
+                        TextView voltageText = (TextView) getView().findViewById(R.id.batteryView);
+                        String batteryString = batPercentage + " %";
+                        voltageText.setText(batteryString);
+                        voltageText.setBackgroundResource(R.color.green);
 
-                    TextView voltageText = (TextView) getView().findViewById(R.id.batteryView);
-                    String batteryString = batteryVoltage + " V";
-                    voltageText.setText(batteryString);
+                        TextView rpmText = (TextView) getView().findViewById(R.id.rpmView);
+                        String rpmString = velocity + " MPH";
+                        rpmText.setText(rpmString);
+                    } else {
+                        TextView voltageText = (TextView) getView().findViewById(R.id.batteryView);
+                        String batteryString = "XX.X%";
+                        voltageText.setText(batteryString);
 
-                    TextView rpmText = (TextView) getView().findViewById(R.id.rpmView);
-                    String rpmString = ERPM + " MPH";
-                    rpmText.setText(rpmString);
-                } else {
-                    TextView voltageText = (TextView) getView().findViewById(R.id.batteryView);
-                    String batteryString = "XX%";
-                    voltageText.setText(batteryString);
+                        TextView rpmText = (TextView) getView().findViewById(R.id.rpmView);
+                        String rpmString = "XX.X MPH";
+                        rpmText.setText(rpmString);
+                    }
+                } catch (NullPointerException ignored) {
 
-                    TextView rpmText = (TextView) getView().findViewById(R.id.rpmView);
-                    String rpmString = "XX MPH";
-                    rpmText.setText(rpmString);
                 }
+
+
                 mhandler.postDelayed(this, 20);
             }
 

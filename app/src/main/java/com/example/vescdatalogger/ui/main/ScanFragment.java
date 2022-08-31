@@ -302,21 +302,6 @@ public class ScanFragment extends Fragment {
     @SuppressLint("MissingPermission")
     private void writeCharacteristic(BluetoothGattCharacteristic characteristic) {
         characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
-        /*
-        byte writeValue[] = new byte[6];
-        writeValue[0] = 2;
-        writeValue[1] = 1;
-        writeValue[2] = UART.COMM_GET_VALUES;
-        byte payload[] = new byte[1];
-        payload[0] = UART.COMM_GET_VALUES;
-        char crc = UART.crc16(payload,1);
-        writeValue[3] = (byte) (crc >>> 8); //MSB CRC
-        Log.i("crcOUTBOUND", "crc MSB is " + writeValue[3]); //64
-        writeValue[4] = (byte) (crc & 0xFF);
-        Log.i("crcOUTBOUND", "crc LSB is " + writeValue[4]); //-124
-        writeValue[5] = 3;
-
-         */
         byte writeValue[] = {2,5,UART.COMM_GET_VALUES_SETUP_SELECTIVE,0,0,1,-128, 0, 0, 3};
         char crc = UART.crc16(writeValue,5);
         writeValue[7] = (byte) (crc >>> 8);

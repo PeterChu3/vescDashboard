@@ -37,7 +37,6 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
             device_name = (TextView) view.findViewById(R.id.device_name);
             mac_address = (TextView) view.findViewById(R.id.mac_address);
             signal_strength = (TextView) view.findViewById(R.id.signal_strength);
-
         }
 
         @SuppressLint("MissingPermission")

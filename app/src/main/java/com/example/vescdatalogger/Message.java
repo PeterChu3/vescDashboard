@@ -1,9 +1,5 @@
 package com.example.vescdatalogger;
 import android.util.Log;
-
-import java.util.Calendar;
-import java.util.Date;
-
 public class Message {
 
     float RPM;
@@ -11,17 +7,9 @@ public class Message {
     byte[] previousglobalbytes = new byte[20];
     byte[] globalbytes = new byte[20];
 
-    Date timestamp;
     int index = 0;
 
     public Message() {
-
-
-//        batteryVoltage = float16(bytes, 10, 29);
-//        Log.i("voltage", String.valueOf(batteryVoltage));
-//        RPM = float32(bytes, 1, 25);
-//        Log.i("RPM", String.valueOf(RPM));
-
     }
     public void addBytes(byte[] bytes, int length) {
         if (bytes[0] == 2) {
@@ -62,24 +50,12 @@ public class Message {
         }
         index = length + index;
     }
-    public Date getTimestamp() {
-        return timestamp;
-    }
     public void printGoodMessage() {
         for (byte element : globalbytes) {
             Log.i("Data_Message", element + "\n");
         }
     }
-    public float getParameter(String parameterName) {
-        switch(parameterName) {
-            case "Battery Voltage":
-                return batteryVoltage;
-            case "ERPM":
-                return RPM;
-            default:
-                return 0;
-        }
-    }
+
 
     private static float float16(byte[] bytes, float scale, int index) {
         int firstByte = ((bytes[index] << 8) & 0x0000ff00);

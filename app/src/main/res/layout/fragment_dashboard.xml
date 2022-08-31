@@ -23,7 +23,8 @@
             android:text="XX MPH"
             android:textAlignment="center"
             android:textColor="#000000"
-            android:textSize="75sp" />
+            android:textSize="75sp"
+            tools:ignore="TextContrastCheck" />
 
         <TextView
             android:id="@+id/Battery"

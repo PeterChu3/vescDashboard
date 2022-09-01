@@ -12,10 +12,16 @@ public class Message {
     public Message() {
     }
     public void addBytes(byte[] bytes, int length) {
-        if (bytes[0] == 2) {
-            addNew(bytes, length);
-        } else {
-            addOld(bytes, length);
+        try {
+            if (bytes[0] == 2) {
+                addNew(bytes, length);
+            } else {
+                addOld(bytes, length);
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            previousglobalbytes = new byte[24];
+            globalbytes = new byte[24];
+            index = 0;
         }
 
     }

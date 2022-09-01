@@ -16,6 +16,7 @@ import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.ParcelUuid;
 import android.os.SystemClock;
 import android.util.Log;
@@ -23,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -35,6 +37,7 @@ import com.example.vescdatalogger.R;
 import com.example.vescdatalogger.ScanResultAdapter;
 import com.example.vescdatalogger.UART;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -49,12 +52,13 @@ public class ScanFragment extends Fragment {
     //private ScanSettings scanSettings = ScanSettings.Builder()
     //scan filter
     private int setResultNum = 0;
+    private final Handler mhandler2 = new Handler();
+    private Runnable mTimer2;
 
     private BluetoothGatt bluetoothGatt;
 
     private BluetoothGattCharacteristic UART_RX;
     private BluetoothGattCharacteristic UART_TX;
-
 
     private List<ScanResult> scanResults = new ArrayList<>();
     public Message globalMessage = Message.get();
@@ -80,7 +84,9 @@ public class ScanFragment extends Fragment {
                 stopBLEscan();
             }
             Log.w("customOnclick","connecting to " + result.getDevice().getAddress());
-            bluetoothGatt = result.getDevice().connectGatt(getContext(), false, bluetoothGattCallback);
+            if (!globalMessage.isConnected) {
+                bluetoothGatt = result.getDevice().connectGatt(getContext(), false, bluetoothGattCallback);
+            }
         }
     }
     customListener newListener = new customListener();

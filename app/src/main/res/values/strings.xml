@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">VESC Data Logger</string>
+    <string name="app_name">VESC Dashboard</string>
     <string name="tab_text_1">Connect</string>
-    <string name="tab_text_2">Data</string>
-    <string name="tab_text_3">Files</string>
+    <string name="tab_text_2">Config</string>
+    <string name="tab_text_3">Dash</string>
     <string name="button_scan">Scan</string>
     <string name="button_write">Write Gatt</string>
     <string name="button_read">Read Gatt</string>

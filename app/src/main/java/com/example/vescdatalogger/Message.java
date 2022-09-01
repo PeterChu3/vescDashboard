@@ -4,8 +4,8 @@ public class Message {
 
     float RPM;
     float batteryVoltage;
-    byte[] previousglobalbytes = new byte[20];
-    byte[] globalbytes = new byte[20];
+    byte[] previousglobalbytes = new byte[24];
+    byte[] globalbytes = new byte[24];
 
     int index = 0;
     public boolean isConnected = false;

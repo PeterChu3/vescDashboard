@@ -37,14 +37,22 @@ public class DashboardFragment extends Fragment {
                     if (globalMessage.isConnected) {
                         batteryVoltage = globalMessage.getBattery();
                         ERPM = globalMessage.getSpeed() / 7;
+                        double batteryPercentage = (((batteryVoltage-(3.1 * 12))/12)*100);
+                        double speedMPH = (ERPM * 3.142 * (60.0/1609.0) * 0.305 * (11.0/66.0));
                         DecimalFormat df = new DecimalFormat("#.#");
-                        String batPercentage = df.format(((batteryVoltage-(3.3 * 12))/12)*100); //Change this to run withMechSetup
-                        String velocity = df.format(ERPM * 3.142 * (60.0/1609.0) * 0.305 * (11.0/66.0));
-                        Log.i("OUT_velocity", velocity);
+                        String batPercentage = df.format(batteryPercentage);
+                        String velocity = df.format(speedMPH);
+
                         TextView voltageText = (TextView) getView().findViewById(R.id.batteryView);
                         String batteryString = batPercentage + " %";
                         voltageText.setText(batteryString);
-                        voltageText.setBackgroundResource(R.color.green);
+                        if (batteryPercentage > 60) {
+                            voltageText.setBackgroundResource(R.color.green);
+                        } else if (batteryPercentage > 30) {
+                            voltageText.setBackgroundResource(R.color.yellow);
+                        } else {
+                            voltageText.setBackgroundResource(R.color.red);
+                        }
 
                         TextView rpmText = (TextView) getView().findViewById(R.id.rpmView);
                         String rpmString = velocity + " MPH";

@@ -11,9 +11,12 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanSettings;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.ParcelUuid;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -253,7 +256,20 @@ public class ScanFragment extends Fragment {
         } else {
             scanResults.clear();
             scanResultAdapter.notifyDataSetChanged();
-            bluetoothLeScanner.startScan(leScanCallback);
+
+
+
+            List<ScanFilter> filters = new ArrayList<ScanFilter>();
+            ScanFilter filter = new ScanFilter.Builder()
+                    .setServiceUuid( new ParcelUuid(UUID.fromString( "6e400001-b5a3-f393-e0a9-e50e24dcca9e" )) )
+                    .build();
+            filters.add(filter);
+
+            ScanSettings settings = new ScanSettings.Builder()
+                    .setScanMode( ScanSettings.SCAN_MODE_LOW_LATENCY )
+                    .build();
+
+            bluetoothLeScanner.startScan(filters,settings,leScanCallback);
             isScanning = true;
         }
     }
